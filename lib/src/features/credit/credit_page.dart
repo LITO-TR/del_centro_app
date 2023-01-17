@@ -1,6 +1,5 @@
-import 'dart:ffi';
-
 import 'package:del_centro_app/src/features/credit/widgets/input_credit.dart';
+import 'package:del_centro_app/src/features/shared/widgets/button_with_icon.dart';
 import 'package:flutter/material.dart';
 
 class CreditPage extends StatefulWidget {
@@ -11,21 +10,19 @@ class CreditPage extends StatefulWidget {
 }
 
 class _CreditPageState extends State<CreditPage> {
+  static const List<String> list = <String>['DIARIO', 'SEMANAL', 'QUINCENAL'];
+  final txtCreditAmount = TextEditingController();
+  final txtInterest = TextEditingController();
+  final txtNumberOfPayments = TextEditingController();
+  final txtName = TextEditingController();
+  final txtLastName = TextEditingController();
+  final txtDNI = TextEditingController();
+  final txtAddress = TextEditingController();
 
-  static const  List<String> list = <String>['DIARIO', 'SEMANAL', 'QUINCENAL'];
-  final  test = TextEditingController();
-  final  txtCreditAmount = TextEditingController();
-  final  txtInterest = TextEditingController();
-  final  txtNumberOfPayments = TextEditingController();
-  double creditAmount = 0.0;
-  double interest = 0.0;
-  double numberOfPayments = 0.0;
-  String txtTotalAmount = '0.0';
-  String txtPayment = '0.0';
-  double ab = 0.0;
-  final myController = TextEditingController();
-  final myController1 = TextEditingController();
-  final myController3 = TextEditingController();
+
+
+  double totalAmount = 0.0;
+  double payments = 0.0;
 
   String dropDownValue = list.first;
 
@@ -33,28 +30,35 @@ class _CreditPageState extends State<CreditPage> {
   void initState() {
     // TODO: implement initState
 
-    // creditAmount = double.parse(txtCreditAmount.text);
-    // interest = double.parse(txtInterest.text);
-    // numberOfPayments = double.parse(txtNumberOfPayments.text);
-    myController.addListener(_plus);
-    myController1.addListener(_plus);
-    myController3.addListener(_plus);
+    txtCreditAmount.addListener(_getPaymentsAndTotal);
+    txtNumberOfPayments.addListener(_getPaymentsAndTotal);
+    txtInterest.addListener(_getPaymentsAndTotal);
     super.initState();
   }
+  @override
+  void dispose(){
+    super.dispose();
+  txtCreditAmount.removeListener(_getPaymentsAndTotal);
+  txtNumberOfPayments.removeListener(_getPaymentsAndTotal);
+  txtInterest.removeListener(_getPaymentsAndTotal);
 
-  _plus(){
+  }
 
+  _getPaymentsAndTotal() {
     setState(() {
-      if(myController.text.isEmpty){
-        ab = double.parse(myController1.text)+ 0 ;
+      if (txtNumberOfPayments.text.isEmpty ||
+          txtCreditAmount.text.isEmpty ||
+          txtInterest.text.isEmpty) {
+        totalAmount = 0.0;
+        payments = 0.0;
+      } else {
+        totalAmount = double.parse(txtCreditAmount.text) +
+            (double.parse(txtCreditAmount.text) *
+                double.parse(txtInterest.text) /
+                100);
+        payments = totalAmount / double.parse(txtNumberOfPayments.text);
       }
-      else if(myController1.text.isEmpty){
-        ab = double.parse(myController.text)+ 0;
-      }
-      ab = double.parse(myController.text) + double.parse(myController1.text);
-
     });
-
   }
 
   Widget build(BuildContext context) {
@@ -66,15 +70,13 @@ class _CreditPageState extends State<CreditPage> {
           height: MediaQuery.of(context).size.height / 1.05,
           decoration: BoxDecoration(
               border: Border.all(color: Colors.grey, width: 1),
-              borderRadius: BorderRadius.circular(15)),
+              borderRadius: BorderRadius.circular(5)),
           child: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
-                  children: const [
-                   Text('DATOS DEL CREDITO')
-                  ],
+                  children: const [Text('DATOS DEL CREDITO')],
                 ),
               ),
               Row(
@@ -83,11 +85,11 @@ class _CreditPageState extends State<CreditPage> {
                   Column(
                     children: [
                       InputCredit(
-                        name: 'Monto Credito',
-                        controller: txtCreditAmount,
-                        suffix: '.00',
-                        prefix: 'S/.',
-                        width: 120),
+                          name: 'Monto Credito',
+                          controller: txtCreditAmount,
+                          suffix: '.00',
+                          prefix: 'S/.',
+                          width: 120),
                       InputCredit(
                           name: 'Interes',
                           controller: txtInterest,
@@ -103,41 +105,27 @@ class _CreditPageState extends State<CreditPage> {
                     ],
                   ),
                   Container(
-
                     width: 150,
                     height: 75,
                     decoration: BoxDecoration(
-                      color: Colors.grey,
-                        border: Border.all(color: Colors.grey, width: 1),
-                        borderRadius: BorderRadius.circular(15)),
+                        color: Colors.grey[300],
+                        //border: Border.all(color: Colors.grey, width: 1),
+                        borderRadius: BorderRadius.circular(5)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Total: S/${txtTotalAmount}'),
-                        Text('Cuota: S/${txtPayment}')
+                        Text('Total: S/$totalAmount'),
+                        Text('Cuota: S/$payments')
                       ],
                     ),
                   )
-                 ],
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    double totalAmount = 0.0;
-                    double payment = 0.0;
-                    setState(() {
-                      totalAmount = creditAmount + creditAmount * interest / 100;
-                      payment = totalAmount / numberOfPayments;
-                      txtTotalAmount = totalAmount.toString();
-                      txtPayment = payment.toString();
-                    });
-                  },
-                  child: const Text('Simular Credito')
+                ],
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
-                  children: const[
-                     Text('DATOS DEL CLIENTE'),
+                  children: const [
+                    Text('DATOS DEL CLIENTE'),
                   ],
                 ),
               ),
@@ -146,17 +134,16 @@ class _CreditPageState extends State<CreditPage> {
                 children: [
                   InputCredit(
                       name: 'Nombres',
-                      controller: test,
+                      controller: txtName,
                       suffix: '',
                       prefix: '',
                       width: 220),
                   InputCredit(
                       name: 'Apellidos',
-                      controller: test,
+                      controller: txtLastName,
                       suffix: '',
                       prefix: '',
                       width: 220),
-
                 ],
               ),
               Row(
@@ -164,13 +151,13 @@ class _CreditPageState extends State<CreditPage> {
                 children: [
                   InputCredit(
                       name: 'DNI',
-                      controller: test,
+                      controller: txtDNI,
                       suffix: '',
                       prefix: '',
                       width: 100),
                   InputCredit(
                       name: 'Dirección',
-                      controller: test,
+                      controller: txtAddress,
                       suffix: '',
                       prefix: '',
                       width: 350),
@@ -179,15 +166,18 @@ class _CreditPageState extends State<CreditPage> {
               const SizedBox(
                 height: 15,
               ),
-
               Container(
-                width: 200,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColorLight,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                width: 150,
                 child: DropdownButtonFormField(
                     value: dropDownValue,
-                    decoration: InputDecoration(
-
-                      border: const OutlineInputBorder(),
-
+                    decoration: const InputDecoration(
+                      border:  OutlineInputBorder(
+                        borderSide: BorderSide.none
+                      ),
                     ),
                     items: list.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
@@ -195,17 +185,24 @@ class _CreditPageState extends State<CreditPage> {
                         child: Text(value),
                       );
                     }).toList(),
-                    onChanged: (String? value){
+                    onChanged: (String? value) {
                       setState(() {
                         dropDownValue = value!;
                       });
-                    }
-
-
-                ),
+                    }),
               ),
 
-              ElevatedButton(onPressed: (){}, child:  const Text('Crear Credito'))
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: ButtonWithIcon(
+                  color: Colors.green,
+                  iconData: Icons.check,
+                  label: 'CREAR',
+                  onPressed: (){},
+
+                )
+
+              ),
             ],
           ),
         ),
@@ -214,23 +211,16 @@ class _CreditPageState extends State<CreditPage> {
           height: MediaQuery.of(context).size.height / 1.05,
           decoration: BoxDecoration(
               border: Border.all(color: Colors.grey, width: 1),
-              borderRadius: BorderRadius.circular(15)),
+              borderRadius: BorderRadius.circular(5)),
           child: Column(
-            children: [
-             /*FutureBuilder(
+            children: const [
+              /*FutureBuilder(
                 future: ,
                 builder: (context,  snapshot) {
 
               },
               ),*/
-              TextField(
-                controller: myController1,
-              ),
-              TextField(
-                controller: myController,
 
-              ),
-              Text(ab.toString()),
             ],
           ),
         ),
