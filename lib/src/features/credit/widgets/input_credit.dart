@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 class InputCredit extends StatefulWidget {
@@ -25,15 +26,23 @@ class _InputCreditState extends State<InputCredit> {
             width: 10,
           ),
           Container(
+              decoration: BoxDecoration(
+               color: Theme.of(context).primaryColorLight,
+                borderRadius: BorderRadius.circular(40),
+              ),
+              height: 45,
               width: widget.width,
               child: TextFormField(
+                autofocus: true,
                 controller: widget.controller,
-                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-
                   suffixText: widget.suffix,
                   prefixText: widget.prefix,
-                  border: const OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide.none,
+
+                  ),
 
                 ),
               )
