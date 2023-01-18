@@ -4,9 +4,12 @@
 
 import 'dart:convert';
 
-List<Credit?>? creditFromJson(String str) => json.decode(str) == null ? [] : List<Credit?>.from(json.decode(str)!.map((x) => Credit.fromJson(x)));
+List<Credit?>? creditFromJson(String str) => jsonDecode(str) == null
+    ? []
+    : List<Credit?>.from(jsonDecode(str)!.map((x) => Credit.fromJson(x)));
 
-String creditToJson(List<Credit?>? data) => json.encode(data == null ? [] : List<dynamic>.from(data!.map((x) => x!.toJson())));
+String creditToJson(List<Credit?>? data) => json.encode(
+    data == null ? [] : List<dynamic>.from(data!.map((x) => x!.toJson())));
 
 class Credit {
   Credit({
@@ -26,7 +29,6 @@ class Credit {
     this.disbursedAmount,
     this.debtAmount,
     this.creditStatus,
-
   });
 
   String? id;
@@ -34,8 +36,8 @@ class Credit {
   double? creditAmount;
   double? decimalInterest;
   int? numberOfPayments;
-  int? paymentsAmount;
-  int? interestAmount;
+  double? paymentsAmount;
+  double? interestAmount;
   String? currentDate;
   double? totalAmount;
   String? paymentMethod;
@@ -49,40 +51,40 @@ class Credit {
   String? employeeId;
 
   factory Credit.fromJson(Map<String, dynamic> json) => Credit(
-    id: json["_id"],
-    creditType: json["creditType"],
-    creditAmount: json["creditAmount"],
-    decimalInterest: json["decimalInterest"].toDouble(),
-    numberOfPayments: json["numberOfPayments"],
-    paymentsAmount: json["paymentsAmount"],
-    interestAmount: json["interestAmount"],
-    currentDate: json["currentDate"],
-    totalAmount: json["totalAmount"],
-    paymentMethod: json["paymentMethod"],
-    mora: json["mora"].toDouble(),
-    firstPayDate: json["firstPayDate"],
-    expirationDate: json["expirationDate"],
-    disbursedAmount: json["disbursedAmount"],
-    debtAmount: json["debtAmount"],
-    creditStatus: json["creditStatus"],
-  );
+        id: json["_id"],
+        creditType: json["creditType"],
+        creditAmount: json["creditAmount"].toDouble(),
+        decimalInterest: json["decimalInterest"].toDouble(),
+        numberOfPayments: json["numberOfPayments"],
+        paymentsAmount: json["paymentsAmount"].toDouble(),
+        interestAmount: json["interestAmount"].toDouble(),
+        currentDate: json["currentDate"],
+        totalAmount: json["totalAmount"].toDouble(),
+        paymentMethod: json["paymentMethod"],
+        mora: json["mora"].toDouble(),
+        firstPayDate: json["firstPayDate"],
+        expirationDate: json["expirationDate"],
+        disbursedAmount: json["disbursedAmount"].toDouble(),
+        debtAmount: json["debtAmount"].toDouble(),
+        creditStatus: json["creditStatus"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "_id": id,
-    "creditType": creditType,
-    "creditAmount": creditAmount,
-    "decimalInterest": decimalInterest,
-    "numberOfPayments": numberOfPayments,
-    "paymentsAmount": paymentsAmount,
-    "interestAmount": interestAmount,
-    "currentDate": currentDate,
-    "totalAmount": totalAmount,
-    "paymentMethod": paymentMethod,
-    "mora": mora,
-    "firstPayDate": firstPayDate,
-    "expirationDate": expirationDate,
-    "disbursedAmount": disbursedAmount,
-    "debtAmount": debtAmount,
-    "creditStatus": creditStatus,
-  };
+        "_id": id,
+        "creditType": creditType,
+        "creditAmount": creditAmount,
+        "decimalInterest": decimalInterest,
+        "numberOfPayments": numberOfPayments,
+        "paymentsAmount": paymentsAmount,
+        "interestAmount": interestAmount,
+        "currentDate": currentDate,
+        "totalAmount": totalAmount,
+        "paymentMethod": paymentMethod,
+        "mora": mora,
+        "firstPayDate": firstPayDate,
+        "expirationDate": expirationDate,
+        "disbursedAmount": disbursedAmount,
+        "debtAmount": debtAmount,
+        "creditStatus": creditStatus,
+      };
 }
