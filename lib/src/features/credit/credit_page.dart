@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:del_centro_app/src/core/api/credit_service.dart';
+import 'package:del_centro_app/src/core/models/credit.dart';
 import 'package:del_centro_app/src/features/credit/widgets/input_credit.dart';
 import 'package:del_centro_app/src/features/shared/widgets/button_with_icon.dart';
+import 'package:del_centro_app/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -26,16 +28,16 @@ class _CreditPageState extends State<CreditPage> {
   double totalAmount = 0.0;
   double payments = 0.0;
   String dropDownValue = list.first;
+  Future<Credit>? creditCreated;
 
   var service = CreditService();
   @override
   void initState() {
+    super.initState();
     // TODO: implement initState
-
     txtCreditAmount.addListener(_getPaymentsAndTotal);
     txtNumberOfPayments.addListener(_getPaymentsAndTotal);
     txtInterest.addListener(_getPaymentsAndTotal);
-    super.initState();
   }
 
   @override
@@ -58,7 +60,7 @@ class _CreditPageState extends State<CreditPage> {
             (double.parse(txtCreditAmount.text) *
                 double.parse(txtInterest.text) /
                 100);
-        payments = totalAmount / double.parse(txtNumberOfPayments.text);
+        payments = totalAmount / int.parse(txtNumberOfPayments.text);
       }
     });
   }
@@ -71,7 +73,7 @@ class _CreditPageState extends State<CreditPage> {
           width: MediaQuery.of(context).size.width / 2.5,
           height: MediaQuery.of(context).size.height / 1.05,
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey, width: 1),
+              color: Styles.backgroundContainer,
               borderRadius: BorderRadius.circular(5)),
           child: Column(
             children: [
@@ -198,7 +200,14 @@ class _CreditPageState extends State<CreditPage> {
                     iconData: Icons.check,
                     label: 'CREAR',
                     onPressed: () {
-                      service.createCredit(100, 0.10, 10, 'week',0.5);
+                      setState(() {
+                        creditCreated = service.createCredit(
+                            double.parse(txtCreditAmount.text),
+                            double.parse(txtInterest.text) / 100,
+                            int.parse(txtNumberOfPayments.text),
+                            dropDownValue,
+                            0.5);
+                      });
                     },
                   )),
             ],
@@ -208,16 +217,35 @@ class _CreditPageState extends State<CreditPage> {
           width: MediaQuery.of(context).size.width / 2.5,
           height: MediaQuery.of(context).size.height / 1.05,
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey, width: 1),
+              color: Styles.backgroundContainer,
               borderRadius: BorderRadius.circular(5)),
-          child: Container(),
-          /*FutureBuilder(
-                future: service.createCredit(100, 0.10, 10, 'week',0.5),
-                builder: (context,  snapshot) {
-                  return Container();
-
-                },
-          ),*/
+          child: FutureBuilder(
+            future: creditCreated,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 400,
+                      height: 525,
+                      decoration: BoxDecoration(
+                          color: Styles.backgroundMainColor,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Text(snapshot.data!.decimalInterest.toString()),
+                    )
+                  ],
+                );
+              }
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text('Creando un nuevo credito'),
+                  CircularProgressIndicator()
+                ],
+              );
+            },
+          ),
         ),
       ],
     );
