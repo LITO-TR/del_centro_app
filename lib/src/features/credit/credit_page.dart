@@ -1,6 +1,10 @@
+import 'dart:convert';
+
+import 'package:del_centro_app/src/core/api/credit_service.dart';
 import 'package:del_centro_app/src/features/credit/widgets/input_credit.dart';
 import 'package:del_centro_app/src/features/shared/widgets/button_with_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class CreditPage extends StatefulWidget {
   const CreditPage({Key? key}) : super(key: key);
@@ -19,13 +23,11 @@ class _CreditPageState extends State<CreditPage> {
   final txtDNI = TextEditingController();
   final txtAddress = TextEditingController();
 
-
-
   double totalAmount = 0.0;
   double payments = 0.0;
-
   String dropDownValue = list.first;
 
+  var service = CreditService();
   @override
   void initState() {
     // TODO: implement initState
@@ -35,13 +37,13 @@ class _CreditPageState extends State<CreditPage> {
     txtInterest.addListener(_getPaymentsAndTotal);
     super.initState();
   }
-  @override
-  void dispose(){
-    super.dispose();
-  txtCreditAmount.removeListener(_getPaymentsAndTotal);
-  txtNumberOfPayments.removeListener(_getPaymentsAndTotal);
-  txtInterest.removeListener(_getPaymentsAndTotal);
 
+  @override
+  void dispose() {
+    super.dispose();
+    txtCreditAmount.removeListener(_getPaymentsAndTotal);
+    txtNumberOfPayments.removeListener(_getPaymentsAndTotal);
+    txtInterest.removeListener(_getPaymentsAndTotal);
   }
 
   _getPaymentsAndTotal() {
@@ -175,9 +177,7 @@ class _CreditPageState extends State<CreditPage> {
                 child: DropdownButtonFormField(
                     value: dropDownValue,
                     decoration: const InputDecoration(
-                      border:  OutlineInputBorder(
-                        borderSide: BorderSide.none
-                      ),
+                      border: OutlineInputBorder(borderSide: BorderSide.none),
                     ),
                     items: list.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
@@ -191,18 +191,16 @@ class _CreditPageState extends State<CreditPage> {
                       });
                     }),
               ),
-
               Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: ButtonWithIcon(
-                  color: Colors.green,
-                  iconData: Icons.check,
-                  label: 'CREAR',
-                  onPressed: (){},
-
-                )
-
-              ),
+                  padding: const EdgeInsets.all(20.0),
+                  child: ButtonWithIcon(
+                    color: Colors.green,
+                    iconData: Icons.check,
+                    label: 'CREAR',
+                    onPressed: () {
+                      service.createCredit(100, 0.10, 10, 'week',0.5);
+                    },
+                  )),
             ],
           ),
         ),
@@ -212,17 +210,14 @@ class _CreditPageState extends State<CreditPage> {
           decoration: BoxDecoration(
               border: Border.all(color: Colors.grey, width: 1),
               borderRadius: BorderRadius.circular(5)),
-          child: Column(
-            children: const [
-              /*FutureBuilder(
-                future: ,
+          child: Container(),
+          /*FutureBuilder(
+                future: service.createCredit(100, 0.10, 10, 'week',0.5),
                 builder: (context,  snapshot) {
+                  return Container();
 
-              },
-              ),*/
-
-            ],
-          ),
+                },
+          ),*/
         ),
       ],
     );
