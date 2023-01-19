@@ -3,6 +3,7 @@ import 'package:del_centro_app/pages/customers_page.dart';
 import 'package:del_centro_app/src/features/credit/credit_page.dart';
 import 'package:del_centro_app/src/features/dashboard/dashboard_page.dart';
 import 'package:flutter/material.dart';
+import 'package:del_centro_app/src/styles/styles.dart';
 class Layout extends StatefulWidget {
   const Layout({Key? key}) : super(key: key);
 
@@ -27,6 +28,7 @@ class _LayoutState extends State<Layout> {
         body: Row(
           children:[
             NavigationRail(
+              backgroundColor: Styles.backgroundOrange,
               selectedIndex: _selectedIndex,
               groupAlignment: groupAlignment,
               onDestinationSelected: (int index) {
@@ -48,9 +50,9 @@ class _LayoutState extends State<Layout> {
                   label: Text('Credito'),
                 ),
                 NavigationRailDestination(
-                  icon: Icon(Icons.star_border),
-                  selectedIcon: Icon(Icons.star),
-                  label: Text('Third'),
+                  icon: Icon(Icons.person_outline),
+                  selectedIcon: Icon(Icons.person),
+                  label: Text('Clientes'),
                 ),
               ],
             ),
