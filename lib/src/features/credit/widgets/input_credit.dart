@@ -1,4 +1,5 @@
 
+import 'package:del_centro_app/src/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class InputCredit extends StatefulWidget {
@@ -21,13 +22,15 @@ class _InputCreditState extends State<InputCredit> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(widget.name),
+          Text(widget.name,style: TextStyle(
+            fontWeight: FontWeight.bold
+          ),),
           SizedBox(
             width: 10,
           ),
           Container(
               decoration: BoxDecoration(
-               color: Theme.of(context).primaryColorLight,
+               color: Styles.scaffoldBackgroundColor,
                 borderRadius: BorderRadius.circular(40),
               ),
               height: 45,
