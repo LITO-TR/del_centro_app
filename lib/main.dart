@@ -1,5 +1,5 @@
 import 'package:del_centro_app/layouts/layout.dart';
-import 'package:del_centro_app/styles/styles.dart';
+import 'package:del_centro_app/src/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 void main() {
