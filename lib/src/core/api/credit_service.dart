@@ -13,17 +13,26 @@ class CreditService {
       "decimalInterest": decimalInterest,
       "numberOfPayments": numberOfPayments,
       "paymentMethod": paymentMethod,
-      "mora": mora
+      "mora": mora,
+      "customerId": '63c87bc4f110c0f21b2d0d59', // change id
+      "employeeId": '63c87cb1f110c0f21b2d0d68' // change id
     };
     final headers = {"Content-Type": "application/json;charset=UTF-8"};
     final res = await http.post(Uri.parse(url),
         headers: headers, body: jsonEncode(credit)); // credit a json
-
     if (res.statusCode == 200) {
+      print('exit');
       var obj = Credit.fromJson(jsonDecode(res.body)); //json a credit
 
       return obj;
-    } else
-      throw Exception('Failed to load post');
+    } else if(res.statusCode == 400){
+      print('estoy aqui');
+      throw Exception('Failed api');
+    }else {
+      print('estoy aqui11');
+      throw Exception('Failed to load');
+    }
+
+
   }
 }
