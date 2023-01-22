@@ -1,6 +1,6 @@
-import 'package:del_centro_app/components/avatar.dart';
-import 'package:del_centro_app/pages/customers_page.dart';
+import 'package:del_centro_app/src/features/shared/widgets/avatar.dart';
 import 'package:del_centro_app/src/features/credit/credit_page.dart';
+import 'package:del_centro_app/src/features/customers/customer_page.dart';
 import 'package:del_centro_app/src/features/dashboard/dashboard_page.dart';
 import 'package:flutter/material.dart';
 import 'package:del_centro_app/src/styles/styles.dart';
@@ -15,9 +15,7 @@ class _LayoutState extends State<Layout> {
   static const List<Widget> _widgetOptions = <Widget>[
     DashboardPage(),
     CreditPage(),
-    Text(
-      'Index 3: Settings',
-    ),
+    CustomerPage()
   ];
     int _selectedIndex = 0;
     NavigationRailLabelType labelType = NavigationRailLabelType.selected;
@@ -25,10 +23,12 @@ class _LayoutState extends State<Layout> {
     @override
     Widget build(BuildContext context) {
       return Scaffold(
+
         body: Row(
           children:[
             NavigationRail(
-              backgroundColor: Styles.backgroundOrange,
+              selectedIconTheme: IconThemeData(color: Styles.backgroundOrange),
+              backgroundColor: Styles.blueDark,
               selectedIndex: _selectedIndex,
               groupAlignment: groupAlignment,
               onDestinationSelected: (int index) {
@@ -38,21 +38,21 @@ class _LayoutState extends State<Layout> {
               },
               labelType: labelType,
               leading: Avatar(),
-              destinations: const <NavigationRailDestination>[
+              destinations:  <NavigationRailDestination>[
                 NavigationRailDestination(
                   icon: Icon(Icons.dashboard_outlined),
                   selectedIcon: Icon(Icons.dashboard),
-                  label: Text('Dashboard'),
+                  label: Text('Dashboard',style: TextStyle(color: Styles.backgroundOrange),),
                 ),
                 NavigationRailDestination(
                   icon: Icon(Icons.credit_card),
                   selectedIcon: Icon(Icons.credit_card),
-                  label: Text('Credito'),
+                  label: Text('Credito',style: TextStyle(color: Styles.backgroundOrange),),
                 ),
                 NavigationRailDestination(
                   icon: Icon(Icons.person_outline),
                   selectedIcon: Icon(Icons.person),
-                  label: Text('Clientes'),
+                  label: Text('Clientes',style: TextStyle(color: Styles.backgroundOrange),),
                 ),
               ],
             ),
