@@ -1,15 +1,10 @@
-// To parse this JSON data, do
-//
-//     final credit = creditFromJson(jsonString);
 
 import 'dart:convert';
 
-List<Credit?>? creditFromJson(String str) => jsonDecode(str) == null
-    ? []
-    : List<Credit?>.from(jsonDecode(str)!.map((x) => Credit.fromJson(x)));
+List<Credit> creditFromJson(String str) => List<Credit>.from(json.decode(str).map((x) => Credit.fromJson(x)));
 
-String creditToJson(List<Credit?>? data) => json.encode(
-    data == null ? [] : List<dynamic>.from(data!.map((x) => x!.toJson())));
+String customerToJson(List<Credit> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
 
 class Credit {
   Credit({
