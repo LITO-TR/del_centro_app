@@ -9,7 +9,9 @@ class Avatar extends StatelessWidget {
       child: Column(
         children: [
           CircleAvatar(),
-          Text('Diana Torres')
+          Text('Diana Torres',style: TextStyle(
+            color: Colors.orangeAccent
+          ),)
         ],
       ),
     );
