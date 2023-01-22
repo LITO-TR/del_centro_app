@@ -1,7 +1,6 @@
 
 import 'package:del_centro_app/src/core/api/credit_service.dart';
 import 'package:del_centro_app/src/core/models/credit.dart';
-import 'package:del_centro_app/src/features/credit/widgets/customer_options.dart';
 import 'package:del_centro_app/src/features/credit/widgets/input_credit.dart';
 import 'package:del_centro_app/src/features/shared/widgets/button_with_icon.dart';
 import 'package:del_centro_app/src/styles/styles.dart';
@@ -23,13 +22,11 @@ class _CreditPageState extends State<CreditPage> {
   final txtLastName = TextEditingController();
   final txtDNI = TextEditingController();
   final txtAddress = TextEditingController();
-
   double totalAmount = 0.0;
   double payments = 0.0;
   String dropDownValue = list.first;
   Future<Credit>? creditCreated;
-
-  var service = CreditService();
+  final service = CreditService();
   @override
   void initState() {
     super.initState();
@@ -266,7 +263,6 @@ class _CreditPageState extends State<CreditPage> {
                   children: [
                     Container(
                       width: 400,
-                
                       decoration: BoxDecoration(
                           color: Styles.blueDark,
                           borderRadius: BorderRadius.circular(10)),
