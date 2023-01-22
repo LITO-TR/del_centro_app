@@ -4,7 +4,7 @@ import 'package:del_centro_app/src/core/models/credit.dart';
 import 'package:http/http.dart' as http;
 
 class CreditService {
-  final String url = "http://localhost:9000/api/credit";
+   String url = "http://localhost:9000/api/credit";
 
   Future<Credit> createCredit(double creditAmount, double decimalInterest,
       int numberOfPayments, String paymentMethod, double mora) async {
@@ -32,7 +32,5 @@ class CreditService {
       print('estoy aqui11');
       throw Exception('Failed to load');
     }
-
-
   }
 }
