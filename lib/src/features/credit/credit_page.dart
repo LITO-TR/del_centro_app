@@ -134,11 +134,11 @@ class _CreditPageState extends State<CreditPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Total: S/$totalAmount',
+                              'Total: S/${totalAmount.toStringAsFixed(2)}',
                               style: const TextStyle(color: Colors.white),
                             ),
                             Text(
-                              'Cuota: S/$payments',
+                              'Cuota: S/${payments.toStringAsFixed(2)}',
                               style: const TextStyle(color: Colors.white),
                             )
                           ],
