@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:del_centro_app/src/core/models/credit.dart';
+import 'package:del_centro_app/src/core/models/payment.dart';
 import 'package:http/http.dart' as http;
 
 class CreditService {
@@ -32,5 +33,21 @@ class CreditService {
       print('estoy aqui11');
       throw Exception('Failed to load');
     }
+  }
+
+  Future<Credit> getCreditbyId(String id) async{
+    final res = await http.get(Uri.parse('$url/$id'));
+    return creditJson(res.body);
+  }
+
+  Future<List<Payment>> getPaymentsByCredit(String creditId)async {
+    final res = await http.get(Uri.parse('$url/$creditId/payments'));
+    print(paymentFromJson(res.body));
+    return paymentFromJson(res.body);
+  }
+  Future<List<Payment>> setPayment(String creditId, String paymentId) async{
+    final res = await http.put(Uri.parse('$url/$creditId/payment/$paymentId'));
+    print('entre ${paymentFromJson(res.body)}');
+    return paymentFromJson(res.body);
   }
 }
