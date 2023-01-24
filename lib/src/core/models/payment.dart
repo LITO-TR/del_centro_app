@@ -24,7 +24,7 @@ class Payment {
   String? id;
   int? paymentOrder;
   String? date;
-  int? payment;
+  double? payment;
   String? status;
   String? paymentDate;
   int? moraDays;
@@ -34,7 +34,7 @@ class Payment {
     id: json["_id"],
     paymentOrder: json["paymentOrder"],
     date: json["date"],
-    payment: json["payment"],
+    payment: json["payment"].toDouble(),
     status: json["status"],
     paymentDate: json["paymentDate"],
     moraDays: json["moraDays"],
