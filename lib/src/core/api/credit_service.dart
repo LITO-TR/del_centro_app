@@ -5,7 +5,7 @@ import 'package:del_centro_app/src/core/models/payment.dart';
 import 'package:http/http.dart' as http;
 
 class CreditService {
-   String url = "http://localhost:9000/api/credit";
+   String url = "http://localhost:9000/api/credits";
 
   Future<Credit> createCredit(double creditAmount, double decimalInterest,
       int numberOfPayments, String paymentMethod, double mora) async {
@@ -45,8 +45,8 @@ class CreditService {
     print(paymentFromJson(res.body));
     return paymentFromJson(res.body);
   }
-  Future<List<Payment>> setPayment(String creditId, String paymentId) async{
-    final res = await http.put(Uri.parse('$url/$creditId/payment/$paymentId'));
+  Future<List<Payment>> setPayment(String paymentId) async{
+    final res = await http.put(Uri.parse('$url/payment/$paymentId'));
     print('entre ${paymentFromJson(res.body)}');
     return paymentFromJson(res.body);
   }
