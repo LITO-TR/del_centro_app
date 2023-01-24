@@ -1,4 +1,5 @@
 import 'package:del_centro_app/src/core/api/credit_service.dart';
+import 'package:del_centro_app/src/core/api/payment_service.dart';
 import 'package:del_centro_app/src/core/models/credit.dart';
 import 'package:del_centro_app/src/core/models/payment.dart';
 import 'package:del_centro_app/src/styles/styles.dart';
@@ -13,7 +14,9 @@ class CustomerCreditDetail extends StatefulWidget {
 
 class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
 
+  final paymentService = PaymentService();
   final creditService = CreditService();
+
   late Future<List<Payment>> _payments;
   TextStyle style = TextStyle(color: Colors.white,fontWeight: FontWeight.bold);
   @override
@@ -167,7 +170,7 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
                                               ElevatedButton(
                                                   onPressed: () {
                                                     setState((){
-                                                      _payments = creditService.setPayment(widget.credit.id.toString(),listPayments[index].id.toString());
+                                                      _payments = paymentService.setPayment(listPayments[index].id.toString());
                                                     });
                                                       },
                                                   child: const Icon(
