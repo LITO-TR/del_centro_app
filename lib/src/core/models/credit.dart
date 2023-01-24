@@ -5,7 +5,7 @@ List<Credit> creditFromJson(String str) => List<Credit>.from(json.decode(str).ma
 
 String customerToJson(List<Credit> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-
+Credit creditJson(String str) => Credit.fromJson(jsonDecode(str));
 class Credit {
   Credit({
     this.id,
