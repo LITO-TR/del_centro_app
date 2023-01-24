@@ -14,11 +14,11 @@ class CustomerPage extends StatefulWidget {
 
 class _CustomerPageState extends State<CustomerPage> {
   late Future<List<Customer>> customers;
+  late Future<List<Credit>> credits;
 
   final service = CustomerService();
   int n = 0;
   List<Credit> creditsList = [];
-  List<String> medalsName = ['DIAMOND', 'GOLD', 'SILVER'];
   @override
   void initState() {
     // TODO: implement initState
@@ -65,14 +65,15 @@ class _CustomerPageState extends State<CustomerPage> {
                               crossAxisCount: 4,
                               crossAxisSpacing: 4.0,
                               mainAxisSpacing: 4.0,
-                              childAspectRatio: 2.8),
+                              childAspectRatio: 2.7),
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         var customer = snapshot.data![index];
 
                         return GestureDetector(
                           onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> CustomerCredits(credits: creditsList)));
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> CustomerCredits(customer: customer)));
+
                           },
                           child: Card(
                             elevation: 4,
@@ -111,54 +112,48 @@ class _CustomerPageState extends State<CustomerPage> {
                                           children: [
                                             Row(
                                               children: [
-                                                Icon(Icons.credit_card_outlined,color: Colors.blue,),
-                                                Text(customer.dni,style: TextStyle(color: Colors.grey),),
+                                                const Icon(Icons.credit_card_outlined,color: Colors.blue,),
+                                                Text(customer.dni,style: const TextStyle(color: Colors.grey),),
                                               ],
                                             ),
                                             Row(
                                               children: [
-                                                Icon(Icons.call,color: Colors.green,),
+                                                const Icon(Icons.call,color: Colors.green,),
                                                 Text(customer.phoneNumber,style: TextStyle(color: Colors.grey),),
                                               ],
                                             )
                                           ]),
-                                          FutureBuilder(
-                                            future:service.getCreditsByCustomer(customer.id),
-                                            builder: ( context,  snapshot) {
+                                      SizedBox(
+                                        child: FutureBuilder<List<Credit>>(
+                                          future:service.getCreditsByCustomer(customer.id),
+                                          builder: ( context,  snapshot) {
+                                            if(snapshot.hasData){
                                               List<Credit> credits = snapshot.data!;
                                               creditsList = credits;
                                               IconData icon = Icons.check_circle;
-                                              Color color = Colors.brown;
-                                              String medals = medalsName[0];
                                               if(credits.length > 5){
                                                 icon = Icons.diamond;
-                                                color = Colors.cyanAccent;
                                               }
                                               else if(credits.length<5){
                                                 icon = Icons.check_circle_outline_outlined;
-                                                medals = medalsName[1];
-                                                color = Colors.amber;
-                                              };
-                                            return Column(
-                                              children: [
-                                                Text(
-                                                  '${credits.length} Creditos',
-                                                  style: TextStyle(color: Colors.grey),
-                                                ),
-                                                Chip(
-                                                  label: Row(
-                                                    children: [
-                                                      Icon(icon,size: 17,),
-                                                      Text(medals,style: const TextStyle(fontWeight: FontWeight.bold),),
-                                                    ],
-                                                  ),
-                                                  backgroundColor: color,
-                                                )
-                                              ],
-                                            );
+                                              }
+                                              return
+                                                Column(
+                                                  children: [
+                                                    Text(
+                                                      '${credits.length} Creditos',
+                                                      style: const TextStyle(color: Colors.grey),
+                                                    ),
+                                                    const Chip(label:
+                                                    Icon(Icons.diamond)
+                                                    )
+                                                  ],
+                                                );
+                                            }
+                                            return const CircularProgressIndicator();
                                           },
-                                          ),
-
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ],
