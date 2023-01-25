@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:del_centro_app/src/core/models/credit.dart';
+import 'package:del_centro_app/src/core/models/customer.dart';
 import 'package:del_centro_app/src/core/models/payment.dart';
 import 'package:http/http.dart' as http;
 
@@ -50,4 +51,9 @@ class CreditService {
     print('entre ${paymentFromJson(res.body)}');
     return paymentFromJson(res.body);
   }
+
+   Future<Customer> getCustomerByCreditId(String creditId)async{
+     final res = await http.get(Uri.parse('$url/$creditId/customer'));
+     return customerJson(res.body);
+   }
 }
