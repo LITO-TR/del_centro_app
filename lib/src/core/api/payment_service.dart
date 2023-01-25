@@ -13,7 +13,8 @@ class PaymentService {
   }
 
   Future<List<Payment>> getPaymentsByDate(String day, String month, String year) async{
-    final res = await http.put(Uri.parse('$url/day/$day/month/$month/year/$year'));
+    print(day+month+year);
+    final res = await http.get(Uri.parse('$url/day/25/month/$month/year/$year'));
     return paymentFromJson(res.body);
 
   }
