@@ -18,6 +18,7 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
   final creditService = CreditService();
 
   late Future<List<Payment>> _payments;
+
   TextStyle style = TextStyle(color: Colors.white,fontWeight: FontWeight.bold);
   @override
   void initState() {
@@ -25,6 +26,7 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
     _payments = creditService.getPaymentsByCredit(widget.credit.id.toString());
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +123,7 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
                               rows: List<DataRow>.generate(
                                   listPayments.length,
                                       (index) {
+
                                     Color colorChip = Colors.grey;
                                     if(listPayments[index].status == "PENDIENTE"){
                                       colorChip = Colors.red;
@@ -168,11 +171,10 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
                                           DataCell(Row(
                                             children: [
                                               ElevatedButton(
-                                                  onPressed: () {
-                                                    setState((){
-                                                      _payments = paymentService.setPayment(listPayments[index].id.toString());
-                                                    });
-                                                      },
+                                                  onPressed: () async{
+                                                    listPayments[index] = await  paymentService.setPayment(listPayments[index].id.toString());
+                                                    setState(() {});
+                                                    },
                                                   child: const Icon(
                                                       Icons.monetization_on)
                                               )
@@ -191,8 +193,8 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
                       print(snapshot.error);
                     return Text('${snapshot.error}');
                   }
-                  return Center(
-                      child: const CircularProgressIndicator()
+                  return const Center(
+                      child: CircularProgressIndicator()
                   );
                 }
 
