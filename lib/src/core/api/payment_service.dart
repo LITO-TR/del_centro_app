@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 
 class PaymentService {
   String url = "http://localhost:9000/api/payments";
+  //String url = "http://10.0.2.2:9000/api/payments";
+
 
 
   /*Future<List<Payment>> setPayment(String paymentId) async{
@@ -14,7 +16,7 @@ class PaymentService {
 */
   Future<List<Payment>> getPaymentsByDate(String day, String month, String year) async{
     print(day+month+year);
-    final res = await http.get(Uri.parse('$url/day/28/month/$month/year/$year'));
+    final res = await http.get(Uri.parse('$url/day/$day/month/$month/year/$year'));
     return paymentFromJson(res.body);
 
   }
