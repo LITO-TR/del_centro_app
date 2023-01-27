@@ -325,7 +325,7 @@ class _CreditPageState extends State<CreditPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'S/. ' + credit.paymentsAmount.toString(),
+                                    'S/. ${credit.paymentsAmount.toString()}',
                                     style: const TextStyle(
                                         fontSize: 25,
                                         color: Colors.white
@@ -342,8 +342,7 @@ class _CreditPageState extends State<CreditPage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    (credit.decimalInterest! * 100).toString() +
-                                        ' %',
+                                    '${((credit.decimalInterest! * 100).toStringAsFixed(2))} %',
                                     style: const TextStyle(
                                         fontSize: 25,
                                         color: Colors.white
