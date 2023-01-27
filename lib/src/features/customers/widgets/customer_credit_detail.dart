@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class CustomerCreditDetail extends StatefulWidget {
   const CustomerCreditDetail({Key? key, required this.credit}) : super(key: key);
-  final Credit credit;
+   final Credit credit;
   @override
   State<CustomerCreditDetail> createState() => _CustomerCreditDetailState();
 }
@@ -16,13 +16,14 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
 
   final paymentService = PaymentService();
   final creditService = CreditService();
-
+  late  Credit creditData;
   late Future<List<Payment>> _payments;
 
   TextStyle style = TextStyle(color: Colors.white,fontWeight: FontWeight.bold);
   @override
   void initState() {
     // TODO: implement initState
+    creditData = widget.credit;
     _payments = creditService.getPaymentsByCredit(widget.credit.id.toString());
     super.initState();
   }
@@ -66,23 +67,27 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
                       Text('MORA DIARIA:  ',style: style),
                       Text('PRIMER DIA DE PAGO:  ',style: style),
                       Text('FECHA DE VENCIMIENTO:  ',style: style),
-                      Text('MONTO DESEMBOLSADO:  ',style: style)
+                      Text('MONTO DESEMBOLSADO:  ',style: style),
+                      Text('DUEDA:  ',style: style)
+
                     ],
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children:  [
-                      Text(widget.credit.creditType.toString()),
-                      Text(widget.credit.creditAmount.toString()),
-                      Text((widget.credit.decimalInterest!*100).toString()),
-                      Text(widget.credit.interestAmount.toString()),
-                      Text(widget.credit.totalAmount.toString()),
-                      Text(widget.credit.paymentsAmount.toString()),
-                      Text(widget.credit.paymentMethod.toString()),
-                      Text(widget.credit.mora.toString()),
-                      Text(widget.credit.firstPayDate.toString()),
-                      Text(widget.credit.expirationDate.toString()),
-                      Text(widget.credit.disbursedAmount.toString()),
+                      Text(creditData.creditType.toString()),
+                      Text(creditData.creditAmount.toString()),
+                      Text((creditData.decimalInterest!*100).toString()),
+                      Text(creditData.interestAmount.toString()),
+                      Text(creditData.totalAmount.toString()),
+                      Text(creditData.paymentsAmount.toString()),
+                      Text(creditData.paymentMethod.toString()),
+                      Text(creditData.mora.toString()),
+                      Text(creditData.firstPayDate.toString()),
+                      Text(creditData.expirationDate.toString()),
+                      Text(creditData.disbursedAmount.toString()),
+                      Text(creditData.debtAmount.toString()),
+
 
                     ],
                   )
@@ -173,7 +178,9 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
                                               ElevatedButton(
                                                   onPressed: () async{
                                                     listPayments[index] = await  paymentService.setPayment(listPayments[index].id.toString());
-                                                    setState(() {});
+                                                    creditData = await creditService.getCreditbyId(listPayments[index].creditId.toString());
+                                                    print('${creditData.creditAmount} Hola');
+                                                     setState(() {});
                                                     },
                                                   child: const Icon(
                                                       Icons.monetization_on)
