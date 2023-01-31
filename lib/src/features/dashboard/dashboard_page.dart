@@ -3,6 +3,7 @@ import 'package:del_centro_app/src/core/api/credit_service.dart';
 import 'package:del_centro_app/src/core/api/payment_service.dart';
 import 'package:del_centro_app/src/core/models/customer.dart';
 import 'package:del_centro_app/src/core/models/payment.dart';
+import 'package:del_centro_app/src/features/credit/widgets/input_credit.dart';
 import 'package:del_centro_app/src/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +21,13 @@ double sumOfPaymentsPaid = 0.0;
 class _DashboardPage extends State<DashboardPage> {
   late Future<List<Payment>> _payments;
   late Future<Customer> _customer;
+
+  late List<Payment> paymentsData;
+  TextEditingController txtCustomerPayment = TextEditingController();
+  TextEditingController txtPaymentMethod = TextEditingController();
+
+  static const List<String> list = <String>['EFECTIVO', 'DEPOSITO'];
+  String dropDownValue = list.first;
 
   final paymentService = PaymentService();
   final creditService = CreditService();
@@ -51,6 +59,146 @@ class _DashboardPage extends State<DashboardPage> {
     print('entreeeee');
     super.dispose();
   }
+
+  showDialogPayment(int index, Customer customer) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Center(
+                child: Text(
+                  "Confirmar Pago",
+                  style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
+                )),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.yellowAccent),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: const [
+                              Text('Cliente: '),
+                              Text('Nro de Cuota: '),
+                              Text('Fecha: '),
+                              Text('Monto de cuota: '),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                ' ${customer.name} ${customer.lastName}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                ' ${paymentsData[index].paymentOrder}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                '${paymentsData[index].date}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                '${paymentsData[index].payment}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  InputCredit(
+                      name: 'Pago',
+                      controller: txtCustomerPayment,
+                      suffix: '',
+                      prefix: '',
+                      width: 150),
+                  const Text(
+                    'METODO DE PAGO',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Styles.scaffoldBackgroundColor,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    width: 150,
+                    child: DropdownButtonFormField(
+                        value: dropDownValue,
+                        dropdownColor: Styles.backgroundOrange,
+                        iconEnabledColor: Styles.blueDark,
+                        decoration: const InputDecoration(
+                          border:
+                          OutlineInputBorder(borderSide: BorderSide.none),
+                        ),
+                        items:
+                        list.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (String? value) {
+                          setState(() {
+                            dropDownValue = value!;
+                          });
+                        }),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  "Cancelar",
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+              TextButton(
+                onPressed: () async {
+                  paymentsData[index] = await  paymentService.setPayment(paymentsData[index].id.toString(),dropDownValue, double.parse(txtCustomerPayment.text));
+                  setState(() {});
+                  txtCustomerPayment.clear();
+
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  "Guardar",
+                  style: TextStyle(color: Colors.green),
+                ),
+              )
+            ],
+          );
+        });
+    //return paymentService.setPayment(payment.id.toString(), dropDownValue,
+    //  double.parse(txtCustomerPayment.text));
+  }
+
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -139,62 +287,87 @@ class _DashboardPage extends State<DashboardPage> {
             ],
           ),
         ),
-        SizedBox(
-          width: 300,
-          height: 100,
-          child: CupertinoDatePicker(
-            mode:  CupertinoDatePickerMode.date,
-            initialDateTime: DateTime.now(),
-            maximumDate:  DateTime(2030),
-            minimumDate: DateTime(2022),
-            onDateTimeChanged: (date){
-              txtDay.text = date.day.toString();
-              txtMonth.text = date.month.toString();
-              txtYear.text = date.year.toString();
-              setState(() {
-              });
-            },
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(20)
+              ),
+              width: 300,
+              height: 100,
+              child: CupertinoDatePicker(
+                mode:  CupertinoDatePickerMode.date,
+                initialDateTime: DateTime.now(),
+                maximumDate:  DateTime(2030),
+                minimumDate: DateTime(2022),
+                onDateTimeChanged: (date){
+                  txtDay.text = date.day.toString();
+                  txtMonth.text = date.month.toString();
+                  txtYear.text = date.year.toString();
+                  setState(() {
+                  });
+                },
 
-          ),
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width*0.9,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('${txtYear.text}/${txtMonth.text}/${txtDay.text}',style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold, ),),
-                const SizedBox(
-                  width: 10,
-                ),
-                ElevatedButton(onPressed: ()  async{
-
-                  String day = txtDay.text;
-                  String month = txtMonth.text;
-                  String year = txtYear.text ;
-
-                  _payments =  paymentService.getPaymentsByDate(day, month, year/*txtDay.text, txtMonth.text, txtYear.text*/);
-                 /* var list = await paymentService.getPaymentsByDate(txtDay.text, txtMonth.text, txtYear.text);
-                  var amountReceivable;
-                  var amountCollected;
-
-                    for (int i = 0; i < list.length; i++) {
-                      amountReceivable += list[i].payment!;
-                      sumOfPayments = amountReceivable;
-                      if (list[i].status == "PAGADO") {
-                        amountCollected += 0;
-                        sumOfPaymentsPaid = amountCollected;
-                      }
-                    }*/
-
-                  setState(() { });
-                }, child: Text('Buscar'))
-              ],
+              ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: Colors.grey
+
+                    )
+                ),
+                width: MediaQuery.of(context).size.width*0.2,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(onPressed: ()  async{
+
+                        String day = txtDay.text;
+                        String month = txtMonth.text;
+                        String year = txtYear.text ;
+
+                        _payments =  paymentService.getPaymentsByDate(day, month, year/*txtDay.text, txtMonth.text, txtYear.text*/);
+                        /* var list = await paymentService.getPaymentsByDate(txtDay.text, txtMonth.text, txtYear.text);
+                      var amountReceivable;
+                      var amountCollected;
+
+                        for (int i = 0; i < list.length; i++) {
+                          amountReceivable += list[i].payment!;
+                          sumOfPayments = amountReceivable;
+                          if (list[i].status == "PAGADO") {
+                            amountCollected += 0;
+                            sumOfPaymentsPaid = amountCollected;
+                          }
+                        }*/
+
+                        setState(() { });
+                      }, child: Text('Buscar')),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text('${txtYear.text}/${txtMonth.text}/${txtDay.text}',style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold, ),),
+
+
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+          ],
         ),
 
         Container(
             width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.6,
+            height: MediaQuery.of(context).size.height * 0.5,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(13),
             ),
@@ -204,6 +377,7 @@ class _DashboardPage extends State<DashboardPage> {
                 double amountCollected = 0.0;
                 double amountReceivable = 0.0;
                 if (snapshot.hasData) {
+                  paymentsData = snapshot.data!;
                   List<Payment> listPayment = snapshot.data!;
 
                   for (int i = 0; i < listPayment.length; i++) {
@@ -217,7 +391,7 @@ class _DashboardPage extends State<DashboardPage> {
                   if (snapshot.data!.isEmpty) {
                     return const Center(
                       child: Text(
-                        'No hay cobranzas hoy',
+                        'Hoy no hay cobranzas',
                         style: TextStyle(
                             fontSize: 30,
                             color: Colors.red,
@@ -246,7 +420,6 @@ class _DashboardPage extends State<DashboardPage> {
                           shape: RoundedRectangleBorder(
                               side: const BorderSide(color: Colors.transparent),
                               borderRadius: BorderRadius.circular(20)),
-                          elevation: 4,
                           child: FutureBuilder<Customer>(
                               future: _customer,
                               builder: (context, snap) {
@@ -262,7 +435,7 @@ class _DashboardPage extends State<DashboardPage> {
                                     children: [
                                       Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: [
                                           Text(
                                             'Nro',
@@ -274,15 +447,15 @@ class _DashboardPage extends State<DashboardPage> {
                                       ),
                                       Column(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                        CrossAxisAlignment.center,
                                         children: [
                                           Row(
-                                            children: [
-                                              Icon(Icons.calendar_month),
+                                            children: const [
+                                              Icon(Icons.calendar_month,color: Colors.red,),
                                               Text(
                                                 'Fecha',
                                                 style: TextStyle(
-                                                    color: Colors.red),
+                                                    fontWeight: FontWeight.bold),
                                               ),
                                             ],
                                           ),
@@ -292,11 +465,11 @@ class _DashboardPage extends State<DashboardPage> {
                                       ),
                                       Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: [
                                           Row(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.person,
                                                 color: Colors.yellow,
                                               ),
@@ -309,17 +482,17 @@ class _DashboardPage extends State<DashboardPage> {
                                               ),
                                             ],
                                           ),
-                                          Text(customer.name),
-                                          Text(customer.lastName)
+                                          Text(customer.name.toString()),
+                                          Text(customer.lastName.toString())
                                         ],
                                       ),
                                       Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: [
                                           Row(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.home,
                                                 color: Colors.brown,
                                               ),
@@ -332,16 +505,16 @@ class _DashboardPage extends State<DashboardPage> {
                                               ),
                                             ],
                                           ),
-                                          Text(customer.address)
+                                          Text(customer.address.toString())
                                         ],
                                       ),
                                       Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: [
                                           Row(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.phone,
                                                 color: Colors.blue,
                                               ),
@@ -354,20 +527,20 @@ class _DashboardPage extends State<DashboardPage> {
                                               ),
                                             ],
                                           ),
-                                          Text(customer.phoneNumber)
+                                          Text(customer.phoneNumber.toString())
                                         ],
                                       ),
                                       Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: [
                                           Row(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.attach_money,
                                                 color: Colors.green,
                                               ),
-                                              Text('Pago',
+                                              Text('Cuota(S/)',
                                                   style: TextStyle(
                                                       color: Styles.blueDark,
                                                       fontWeight:
@@ -381,7 +554,51 @@ class _DashboardPage extends State<DashboardPage> {
                                       ),
                                       Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.handshake_sharp,
+                                                color: Colors.red,
+                                              ),
+                                              Text(
+                                                'Metodo Pago',
+                                                style: TextStyle(
+                                                    color: Styles.blueDark,
+                                                    fontWeight:
+                                                    FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                          Text(listPayment[index].paymentMethod.toString())
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.money,
+                                                color: Colors.green,
+                                              ),
+                                              Text(
+                                                'Monto Pago',
+                                                style: TextStyle(
+                                                    color: Styles.blueDark,
+                                                    fontWeight:
+                                                    FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                          Text(listPayment[index].customerPayment.toString())
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
                                           Text(
                                             'Estado',
@@ -397,7 +614,7 @@ class _DashboardPage extends State<DashboardPage> {
                                               child: Center(
                                                 child: Text(
                                                   labelStatus,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontSize: 23),
@@ -405,9 +622,10 @@ class _DashboardPage extends State<DashboardPage> {
                                               ))
                                         ],
                                       ),
+
                                       Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: [
                                           Text(
                                             'Acciones',
@@ -417,12 +635,9 @@ class _DashboardPage extends State<DashboardPage> {
                                           ),
                                           ElevatedButton(
                                               onPressed: () async {
-                                                listPayment[index] =
-                                                    await paymentService
-                                                        .setPayment(
-                                                            listPayment[index]
-                                                                .id
-                                                                .toString());
+                                                // listPayment[index] = await paymentService.setPayment(listPayment[index].id.toString());
+                                                showDialogPayment(index, customer);
+
                                                 setState(() {});
                                                 if (sumOfPaymentsPaid <=
                                                     sumOfPayments) {
