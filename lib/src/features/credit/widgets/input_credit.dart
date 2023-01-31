@@ -22,10 +22,10 @@ class _InputCreditState extends State<InputCredit> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(widget.name,style: TextStyle(
+          Text(widget.name,style: const TextStyle(
             fontWeight: FontWeight.bold
           ),),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Container(
