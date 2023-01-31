@@ -15,15 +15,15 @@ class PaymentService {
   }
 */
   Future<List<Payment>> getPaymentsByDate(String day, String month, String year) async{
-    print(day+month+year);
+    // print(day+month+year);
     final res = await http.get(Uri.parse('$url/day/$day/month/$month/year/$year'));
     return paymentFromJson(res.body);
 
   }
 
-  Future<Payment> setPayment(String paymentId) async{
-    final res = await http.put(Uri.parse('$url/$paymentId'));
-    print(res.body);
+  Future<Payment> setPayment(String paymentId, String method, double customerPayment) async{
+    final res = await http.put(Uri.parse('$url/$paymentId/method/$method/customer-payment/$customerPayment'));
+    // print(res.body);
     return paymentJson(res.body);
   }
 
