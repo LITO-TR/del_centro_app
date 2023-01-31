@@ -1,3 +1,4 @@
+import 'package:del_centro_app/src/features/balance/balance_page.dart';
 import 'package:del_centro_app/src/features/shared/widgets/avatar.dart';
 import 'package:del_centro_app/src/features/credit/credit_page.dart';
 import 'package:del_centro_app/src/features/customers/customer_page.dart';
@@ -15,7 +16,8 @@ class _LayoutState extends State<Layout> {
   static const List<Widget> _widgetOptions = <Widget>[
     DashboardPage(),
     CreditPage(),
-    CustomerPage()
+    CustomerPage(),
+    BalancePage()
   ];
     int _selectedIndex = 0;
     NavigationRailLabelType labelType = NavigationRailLabelType.selected;
@@ -40,19 +42,24 @@ class _LayoutState extends State<Layout> {
               leading: Avatar(),
               destinations:  <NavigationRailDestination>[
                 NavigationRailDestination(
-                  icon: Icon(Icons.dashboard_outlined),
-                  selectedIcon: Icon(Icons.dashboard),
-                  label: Text('Dashboard',style: TextStyle(color: Styles.backgroundOrange),),
+                  icon: const Icon(Icons.monetization_on),
+                  selectedIcon: Icon(Icons.monetization_on),
+                  label: Text('Cobrar',style: TextStyle(color: Styles.backgroundOrange),),
                 ),
                 NavigationRailDestination(
-                  icon: Icon(Icons.credit_card),
-                  selectedIcon: Icon(Icons.credit_card),
+                  icon: const Icon(Icons.credit_card),
+                  selectedIcon: const Icon(Icons.credit_card),
                   label: Text('Credito',style: TextStyle(color: Styles.backgroundOrange),),
                 ),
                 NavigationRailDestination(
-                  icon: Icon(Icons.person_outline),
-                  selectedIcon: Icon(Icons.person),
+                  icon: const Icon(Icons.person_outline),
+                  selectedIcon: const Icon(Icons.person),
                   label: Text('Clientes',style: TextStyle(color: Styles.backgroundOrange),),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.balance_outlined),
+                  selectedIcon: Icon(Icons.balance),
+                  label: Text('Cuadrar',style: TextStyle(color: Styles.backgroundOrange),),
                 ),
               ],
             ),
