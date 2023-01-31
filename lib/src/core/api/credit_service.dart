@@ -11,21 +11,20 @@ class CreditService {
 
 
 
-   Future<Credit> createCredit(double creditAmount, double decimalInterest,
-      int numberOfPayments, String paymentMethod, double mora) async {
-    final credit = {
+   Future<Credit> createCredit(double creditAmount,double decimalInterest, int numberOfPayments, String paymentMethod, mora,Customer customer) async {
+    final creditObj = {
       "creditAmount": creditAmount,
       "decimalInterest": decimalInterest,
       "numberOfPayments": numberOfPayments,
       "paymentMethod": paymentMethod,
       "mora": mora,
-      "customerId": '63c87bc4f110c0f21b2d0d59', // change id
+      "customerId": customer.id, // change id
       "employeeId": '63c87cb1f110c0f21b2d0d68' // change id
     };
-    print(decimalInterest);
+    print(creditObj);
     final headers = {"Content-Type": "application/json;charset=UTF-8"};
     final res = await http.post(Uri.parse(url),
-        headers: headers, body: jsonEncode(credit)); // credit a json
+        headers: headers, body: jsonEncode(creditObj)); // credit a json
     if (res.statusCode == 200) {
       var obj = Credit.fromJson(jsonDecode(res.body)); //json a credit
       return obj;
@@ -54,6 +53,6 @@ class CreditService {
 
    Future<Customer> getCustomerByCreditId(String creditId)async{
      final res = await http.get(Uri.parse('$url/$creditId/customer'));
-     return customerJson(res.body);
+     return customerFromJson(res.body);
    }
 }
