@@ -1,6 +1,7 @@
-
 import 'package:del_centro_app/src/core/api/credit_service.dart';
+import 'package:del_centro_app/src/core/api/customer_service.dart';
 import 'package:del_centro_app/src/core/models/credit.dart';
+import 'package:del_centro_app/src/core/models/customer.dart';
 import 'package:del_centro_app/src/features/credit/widgets/input_credit.dart';
 import 'package:del_centro_app/src/features/shared/widgets/button_with_icon.dart';
 import 'package:del_centro_app/src/styles/styles.dart';
@@ -14,6 +15,9 @@ class CreditPage extends StatefulWidget {
 }
 
 class _CreditPageState extends State<CreditPage> {
+
+  int _selectedIndex = 0;
+
   static const List<String> list = <String>['day', 'week', 'QUINCENAL'];
   final txtCreditAmount = TextEditingController();
   final txtInterest = TextEditingController();
@@ -27,10 +31,15 @@ class _CreditPageState extends State<CreditPage> {
   String dropDownValue = list.first;
   Future<Credit>? creditCreated;
   final service = CreditService();
+  late Customer customerSelected;
+
+  late Future<List<Customer>> _customers;
+  final customerService = CustomerService();
   @override
   void initState() {
     super.initState();
     // TODO: implement initState
+    _customers = customerService.getAllCustomers();
     txtCreditAmount.addListener(_getPaymentsAndTotal);
     txtNumberOfPayments.addListener(_getPaymentsAndTotal);
     txtInterest.addListener(_getPaymentsAndTotal);
@@ -61,6 +70,7 @@ class _CreditPageState extends State<CreditPage> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -118,11 +128,16 @@ class _CreditPageState extends State<CreditPage> {
                     children: [
                       Row(
                         children: const [
-                          Icon(Icons.table_view,color: Colors.green,),
-                          Text('SIMULADOR', style: TextStyle(fontWeight: FontWeight.bold),),
+                          Icon(
+                            Icons.table_view,
+                            color: Colors.green,
+                          ),
+                          Text(
+                            'SIMULADOR',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ],
                       ),
-
                       Container(
                         width: 150,
                         height: 75,
@@ -147,61 +162,6 @@ class _CreditPageState extends State<CreditPage> {
                     ],
                   )
                 ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.person,
-                      color: Colors.green,
-                    ),
-                    Text(
-                      'DATOS CLIENTE',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-             // CustomerOptions(), process
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  InputCredit(
-                      name: 'Nombres',
-                      controller: txtName,
-                      suffix: '',
-                      prefix: '',
-                      width: 220),
-                  InputCredit(
-                      name: 'Apellidos',
-                      controller: txtLastName,
-                      suffix: '',
-                      prefix: '',
-                      width: 220),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  InputCredit(
-                      name: 'DNI',
-                      controller: txtDNI,
-                      suffix: '',
-                      prefix: '',
-                      width: 100),
-                  InputCredit(
-                      name: 'Dirección',
-                      controller: txtAddress,
-                      suffix: '',
-                      prefix: '',
-                      width: 350),
-                ],
-              ),
-              const SizedBox(
-                height: 15,
               ),
               Container(
                 decoration: BoxDecoration(
@@ -229,7 +189,58 @@ class _CreditPageState extends State<CreditPage> {
                     }),
               ),
               Padding(
-                  padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.person,
+                      color: Colors.green,
+                    ),
+                    Text(
+                      'CLIENTE',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(20)),
+                child: FutureBuilder(
+                    future: _customers,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        List<Customer> customer = snapshot.data!;
+                        return ListView.builder(
+                            itemCount: customer.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(customer[index].name.toString()),
+                                subtitle:
+                                    Text(customer[index].lastName.toString()),
+                                leading: Icon(Icons.person),
+                                selected: index == _selectedIndex,
+                                onTap: () {
+                                  setState(() {
+                                    _selectedIndex = index;
+                                  });
+                                  customerSelected = customer[index];
+                                  print(customerSelected.name);
+
+                                },
+                              );
+                            });
+                      }
+                      return const Center(child: CircularProgressIndicator());
+                    }),
+              ),
+              Padding(
+                  padding: const EdgeInsets.all(10.0),
                   child: ButtonWithIcon(
                     color: Colors.green,
                     iconData: Icons.check,
@@ -241,7 +252,8 @@ class _CreditPageState extends State<CreditPage> {
                             double.parse(txtInterest.text) / 100,
                             int.parse(txtNumberOfPayments.text),
                             dropDownValue,
-                            0.5);
+                            0.5,
+                            customerSelected);
                       });
                     },
                   )),
@@ -278,22 +290,33 @@ class _CreditPageState extends State<CreditPage> {
                               ),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   Icon(
                                     Icons.person_outline,
                                     size: 40,
                                   ),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        'Juan Junior Paredes Rojas',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            customerSelected.name.toString(),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            ' ${customerSelected.lastName.toString()}',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
                                       ),
-                                      Text('72781103'),
-                                      Text('Jr. Pachacutecx N°204'),
+                                      Text('DNI: ${customerSelected.dni.toString()}'),
+                                      Text('CEL: ${customerSelected.phoneNumber.toString()}'),
                                     ],
                                   ),
                                 ],
@@ -327,14 +350,12 @@ class _CreditPageState extends State<CreditPage> {
                                   Text(
                                     'S/. ${credit.paymentsAmount.toString()}',
                                     style: const TextStyle(
-                                        fontSize: 25,
-                                        color: Colors.white
-                                    ),
+                                        fontSize: 25, color: Colors.white),
                                   ),
                                   Text(
                                     'Couta ',
-                                    style:
-                                    TextStyle(color: Styles.backgroundOrange),
+                                    style: TextStyle(
+                                        color: Styles.backgroundOrange),
                                   ),
                                 ],
                               ),
@@ -344,9 +365,7 @@ class _CreditPageState extends State<CreditPage> {
                                   Text(
                                     '${((credit.decimalInterest! * 100).toStringAsFixed(2))} %',
                                     style: const TextStyle(
-                                        fontSize: 25,
-                                        color: Colors.white
-                                    ),
+                                        fontSize: 25, color: Colors.white),
                                   ),
                                   Text(
                                     'Interes',
@@ -384,18 +403,15 @@ class _CreditPageState extends State<CreditPage> {
                                   Text(
                                     credit.numberOfPayments.toString(),
                                     style: const TextStyle(
-                                        fontSize: 25,
-                                        color: Colors.white
-                                    ),
+                                        fontSize: 25, color: Colors.white),
                                   ),
                                   Text(
                                     'Numero de Cuotas ',
-                                    style:
-                                    TextStyle(color: Styles.backgroundOrange),
+                                    style: TextStyle(
+                                        color: Styles.backgroundOrange),
                                   ),
                                 ],
                               ),
-
                             ],
                           ),
                           const SizedBox(
@@ -403,10 +419,9 @@ class _CreditPageState extends State<CreditPage> {
                           ),
                           Container(
                             decoration: BoxDecoration(
-                              color: Styles.backgroundOrange,
-                              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(10))
-
-                            ),
+                                color: Styles.backgroundOrange,
+                                borderRadius: const BorderRadius.vertical(
+                                    bottom: Radius.circular(10))),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
@@ -416,13 +431,14 @@ class _CreditPageState extends State<CreditPage> {
                                     children: [
                                       Text(
                                         'Primer dia de Pago:  ',
-                                        style:
-                                        TextStyle(color: Styles.blueDark,
+                                        style: TextStyle(
+                                          color: Styles.blueDark,
                                         ),
                                       ),
                                       Text(
                                         credit.firstPayDate.toString(),
-                                        style:  TextStyle(color: Styles.blueDark,
+                                        style: TextStyle(
+                                            color: Styles.blueDark,
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ],
@@ -432,14 +448,14 @@ class _CreditPageState extends State<CreditPage> {
                                     children: [
                                       Text(
                                         'Ultimo dia de Pago:  ',
-                                        style:
-                                        TextStyle(color: Styles.blueDark,
-
+                                        style: TextStyle(
+                                          color: Styles.blueDark,
                                         ),
                                       ),
                                       Text(
                                         credit.expirationDate.toString(),
-                                        style: TextStyle(color: Styles.blueDark,
+                                        style: TextStyle(
+                                            color: Styles.blueDark,
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ],
@@ -447,9 +463,7 @@ class _CreditPageState extends State<CreditPage> {
                                 ],
                               ),
                             ),
-
                           ),
-
                         ],
                       ),
                     ),
