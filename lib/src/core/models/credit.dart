@@ -3,7 +3,7 @@ import 'dart:convert';
 
 List<Credit> creditFromJson(String str) => List<Credit>.from(json.decode(str).map((x) => Credit.fromJson(x)));
 
-String customerToJson(List<Credit> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String creditToJson(List<Credit> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 Credit creditJson(String str) => Credit.fromJson(jsonDecode(str));
 class Credit {
