@@ -1,4 +1,3 @@
-import 'package:del_centro_app/src/core/api/credit_service.dart';
 import 'package:del_centro_app/src/core/api/customer_service.dart';
 import 'package:del_centro_app/src/core/models/credit.dart';
 import 'package:del_centro_app/src/core/models/customer.dart';
@@ -19,7 +18,7 @@ class _CustomerCreditsState extends State<CustomerCredits> {
   @override
   void initState() {
     // TODO: implement initState
-    credits = customerService.getCreditsByCustomer(widget.customer.id);
+    credits = customerService.getCreditsByCustomer(widget.customer.id.toString());
     super.initState();
   }
 
@@ -30,12 +29,23 @@ class _CustomerCreditsState extends State<CustomerCredits> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.customer.name),
+          title: Text(widget.customer.name.toString()),
           centerTitle: true,
           backgroundColor: Styles.blueDark,
         ),
         body: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: MediaQuery.of(context).size.height * 0.3,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Styles.blueDark)
+                ),
+              ),
+            ),
+
             FutureBuilder<List<Credit>>(
                 future: credits,
                 builder: (context, snapshot) {
@@ -43,8 +53,8 @@ class _CustomerCreditsState extends State<CustomerCredits> {
 
                     return Container(
                       decoration: const BoxDecoration(),
-                      width: MediaQuery.of(context).size.width / 1.1,
-                      height: MediaQuery.of(context).size.height / 1.13,
+                      width: MediaQuery.of(context).size.width *1,
+                      height: MediaQuery.of(context).size.height *0.6,
                       child: GridView.builder(
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
@@ -64,7 +74,7 @@ class _CustomerCreditsState extends State<CustomerCredits> {
                             }
                             return GestureDetector(
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=> CustomerCreditDetail(credit: credit,)));
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=> CustomerCreditDetail(credit: credit,customer: widget.customer,)));
                               },
                               child: Card(
                                 elevation: 4,
