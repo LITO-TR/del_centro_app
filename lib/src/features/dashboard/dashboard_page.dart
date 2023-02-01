@@ -1,9 +1,10 @@
-
 import 'package:del_centro_app/src/core/api/credit_service.dart';
 import 'package:del_centro_app/src/core/api/payment_service.dart';
+import 'package:del_centro_app/src/core/models/credit.dart';
 import 'package:del_centro_app/src/core/models/customer.dart';
 import 'package:del_centro_app/src/core/models/payment.dart';
 import 'package:del_centro_app/src/features/credit/widgets/input_credit.dart';
+import 'package:del_centro_app/src/features/customers/widgets/customer_credit_detail.dart';
 import 'package:del_centro_app/src/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,7 +33,7 @@ class _DashboardPage extends State<DashboardPage> {
   final paymentService = PaymentService();
   final creditService = CreditService();
   final date = DateTime.now();
-    TextEditingController txtDay = TextEditingController();
+  TextEditingController txtDay = TextEditingController();
   TextEditingController txtMonth = TextEditingController();
   TextEditingController txtYear = TextEditingController();
 
@@ -48,7 +49,7 @@ class _DashboardPage extends State<DashboardPage> {
     txtYear.text = 'yyyy';
     //sumOfPayments =0.0;
     //sumOfPaymentsPaid=0.0;
-   // dateController.text = "";
+    // dateController.text = "";
 
     super.initState();
   }
@@ -67,10 +68,10 @@ class _DashboardPage extends State<DashboardPage> {
           return AlertDialog(
             title: const Center(
                 child: Text(
-                  "Confirmar Pago",
-                  style:
+              "Confirmar Pago",
+              style:
                   TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
-                )),
+            )),
             content: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -88,8 +89,8 @@ class _DashboardPage extends State<DashboardPage> {
                             children: const [
                               Text('Cliente: '),
                               Text('Nro de Cuota: '),
-                              Text('Fecha: '),
-                              Text('Monto de cuota: '),
+                              Text('Fecha de Vencimiento: '),
+                              Text('Cuota: '),
                             ],
                           ),
                           Column(
@@ -125,13 +126,14 @@ class _DashboardPage extends State<DashboardPage> {
                     height: 15,
                   ),
                   InputCredit(
-                      name: 'Pago',
+                      name: 'MONTO PAGADO',
                       controller: txtCustomerPayment,
                       suffix: '',
                       prefix: '',
-                      width: 150),
+                      width: 150,
+                    type: TextInputType.number,),
                   const Text(
-                    'METODO DE PAGO',
+                    'METODO PAGO',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Container(
@@ -146,10 +148,10 @@ class _DashboardPage extends State<DashboardPage> {
                         iconEnabledColor: Styles.blueDark,
                         decoration: const InputDecoration(
                           border:
-                          OutlineInputBorder(borderSide: BorderSide.none),
+                              OutlineInputBorder(borderSide: BorderSide.none),
                         ),
                         items:
-                        list.map<DropdownMenuItem<String>>((String value) {
+                            list.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(value),
@@ -176,7 +178,10 @@ class _DashboardPage extends State<DashboardPage> {
               ),
               TextButton(
                 onPressed: () async {
-                  paymentsData[index] = await  paymentService.setPayment(paymentsData[index].id.toString(),dropDownValue, double.parse(txtCustomerPayment.text));
+                  paymentsData[index] = await paymentService.setPayment(
+                      paymentsData[index].id.toString(),
+                      dropDownValue,
+                      double.parse(txtCustomerPayment.text));
                   setState(() {});
                   txtCustomerPayment.clear();
 
@@ -194,488 +199,503 @@ class _DashboardPage extends State<DashboardPage> {
     //  double.parse(txtCustomerPayment.text));
   }
 
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      child:
-      Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children:
-          [
-        Container(
-          width: MediaQuery.of(context).size.width * 0.9,
-          height: MediaQuery.of(context).size.height * 0.2,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(13),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                width: 200,
-                height: 100,
-                decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(20)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      sumOfPayments.toStringAsFixed(2),
-                      style: TextStyle(fontSize: 35, color: Colors.white),
-                    ),
-                    Text(
-                      'Monto por cobrar',
-                      style: TextStyle(
-                          color: Styles.blueDark, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: 200,
-                height: 100,
-                decoration: BoxDecoration(
-                    color: Styles.blueDark,
-                    borderRadius: BorderRadius.circular(20)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      sumOfPaymentsPaid.toStringAsFixed(2),
-                      style: TextStyle(fontSize: 35, color: Colors.white),
-                    ),
-                    Text(
-                      'Monto cobrado',
-                      style: TextStyle(
-                          color: Styles.backgroundOrange,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: 200,
-                height: 100,
-                decoration: BoxDecoration(
-                    color: Styles.blueDark,
-                    borderRadius: BorderRadius.circular(20)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '123',
-                      style: TextStyle(fontSize: 35, color: Colors.white),
-                    ),
-                    Text(
-                      'Monto desembolsado',
-                      style: TextStyle(
-                          color: Styles.backgroundOrange,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
+    return ListView(
+      children: [
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child:
+          Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+           /* Container(
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.height * 0.2,
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(20)
+                borderRadius: BorderRadius.circular(13),
               ),
-              width: 300,
-              height: 100,
-              child: CupertinoDatePicker(
-                mode:  CupertinoDatePickerMode.date,
-                initialDateTime: DateTime.now(),
-                maximumDate:  DateTime(2030),
-                minimumDate: DateTime(2022),
-                onDateTimeChanged: (date){
-                  txtDay.text = date.day.toString();
-                  txtMonth.text = date.month.toString();
-                  txtYear.text = date.year.toString();
-                  setState(() {
-                  });
-                },
-
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    width: 200,
+                    height: 100,
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          sumOfPayments.toStringAsFixed(2),
+                          style: const TextStyle(fontSize: 35, color: Colors.white),
+                        ),
+                        Text(
+                          'Monto por cobrar',
+                          style: TextStyle(
+                              color: Styles.blueDark, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 200,
+                    height: 100,
+                    decoration: BoxDecoration(
+                        color: Styles.blueDark,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          sumOfPaymentsPaid.toStringAsFixed(2),
+                          style: const TextStyle(fontSize: 35, color: Colors.white),
+                        ),
+                        Text(
+                          'Monto cobrado',
+                          style: TextStyle(
+                              color: Styles.backgroundOrange,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 200,
+                    height: 100,
+                    decoration: BoxDecoration(
+                        color: Styles.blueDark,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          '123',
+                          style: TextStyle(fontSize: 35, color: Colors.white),
+                        ),
+                        Text(
+                          'Monto desembolsado',
+                          style: TextStyle(
+                              color: Styles.backgroundOrange,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                        color: Colors.grey
-
-                    )
-                ),
-                width: MediaQuery.of(context).size.width*0.2,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(onPressed: ()  async{
-
-                        String day = txtDay.text;
-                        String month = txtMonth.text;
-                        String year = txtYear.text ;
-
-                        _payments =  paymentService.getPaymentsByDate(day, month, year/*txtDay.text, txtMonth.text, txtYear.text*/);
-                        /* var list = await paymentService.getPaymentsByDate(txtDay.text, txtMonth.text, txtYear.text);
-                      var amountReceivable;
-                      var amountCollected;
-
-                        for (int i = 0; i < list.length; i++) {
-                          amountReceivable += list[i].payment!;
-                          sumOfPayments = amountReceivable;
-                          if (list[i].status == "PAGADO") {
-                            amountCollected += 0;
-                            sumOfPaymentsPaid = amountCollected;
-                          }
-                        }*/
-
-                        setState(() { });
-                      }, child: Text('Buscar')),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text('${txtYear.text}/${txtMonth.text}/${txtDay.text}',style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold, ),),
-
-
-                    ],
+            ),*/
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(20)),
+                  width: 300,
+                  height: 100,
+                  child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.date,
+                    initialDateTime: DateTime.now(),
+                    maximumDate: DateTime(2030),
+                    minimumDate: DateTime(2022),
+                    onDateTimeChanged: (date) {
+                      txtDay.text = date.day.toString();
+                      txtMonth.text = date.month.toString();
+                      txtYear.text = date.year.toString();
+                      setState(() {});
+                    },
                   ),
                 ),
-              ),
-            ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.grey)),
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                              onPressed: () async {
+                                String day = txtDay.text;
+                                String month = txtMonth.text;
+                                String year = txtYear.text;
 
-          ],
-        ),
+                                _payments = paymentService.getPaymentsByDate(
+                                    day,
+                                    month,
+                                    year /*txtDay.text, txtMonth.text, txtYear.text*/);
+                                /* var list = await paymentService.getPaymentsByDate(txtDay.text, txtMonth.text, txtYear.text);
+                        var amountReceivable;
+                        var amountCollected;
 
-        Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.5,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(13),
-            ),
-            child: FutureBuilder<List<Payment>>(
-              future: _payments,
-              builder: (context, snapshot) {
-                double amountCollected = 0.0;
-                double amountReceivable = 0.0;
-                if (snapshot.hasData) {
-                  paymentsData = snapshot.data!;
-                  List<Payment> listPayment = snapshot.data!;
+                          for (int i = 0; i < list.length; i++) {
+                            amountReceivable += list[i].payment!;
+                            sumOfPayments = amountReceivable;
+                            if (list[i].status == "PAGADO") {
+                              amountCollected += 0;
+                              sumOfPaymentsPaid = amountCollected;
+                            }
+                          }*/
 
-                  for (int i = 0; i < listPayment.length; i++) {
-                    amountReceivable += listPayment[i].payment!;
-                    sumOfPayments = amountReceivable;
-                    if (listPayment[i].status == "PAGADO") {
-                      amountCollected += listPayment[i].payment!;
-                      sumOfPaymentsPaid = amountCollected;
-                    }
-                  }
-                  if (snapshot.data!.isEmpty) {
-                    return const Center(
-                      child: Text(
-                        'Hoy no hay cobranzas',
-                        style: TextStyle(
-                            fontSize: 30,
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold),
+                                setState(() {});
+                              },
+                              child: Text('Buscar')),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            '${txtYear.text}/${txtMonth.text}/${txtDay.text}',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                    );
-                  }
-                  return ListView.builder(
-                    itemCount: listPayment.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (context, int index) {
-                      _customer = creditService.getCustomerByCreditId(
-                          listPayment[index].creditId.toString());
-                      Color colorStatus = Colors.grey;
-                      String labelStatus = 'E';
-                      if (listPayment[index].status == "PENDIENTE") {
-                        colorStatus = Colors.red;
-                        labelStatus = 'D';
-                      } else if (listPayment[index].status == "PAGADO") {
-                        colorStatus = Colors.green;
-                        labelStatus = 'P';
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: MediaQuery.of(context).size.height * 0.7,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(13),
+                ),
+                child: FutureBuilder<List<Payment>>(
+                  future: _payments,
+                  builder: (context, snapshot) {
+                    double amountCollected = 0.0;
+                    double amountReceivable = 0.0;
+                    if (snapshot.hasData) {
+                      paymentsData = snapshot.data!;
+                      List<Payment> listPayment = snapshot.data!;
+
+                      for (int i = 0; i < listPayment.length; i++) {
+                        amountReceivable += listPayment[i].payment!;
+                        sumOfPayments = amountReceivable;
+                        if (listPayment[i].status == "PAGADO") {
+                          amountCollected += listPayment[i].payment!;
+                          sumOfPaymentsPaid = amountCollected;
+                        }
                       }
-                      return SizedBox(
-                        height: 70,
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                              side: const BorderSide(color: Colors.transparent),
-                              borderRadius: BorderRadius.circular(20)),
-                          child: FutureBuilder<Customer>(
-                              future: _customer,
-                              builder: (context, snap) {
-                                if (snapshot.hasData) {
-                                  if (snap.data == null) {
-                                    return const Center(
-                                        child: LinearProgressIndicator());
-                                  }
-                                  Customer customer = snap.data!;
-                                  return Row(
-                                    mainAxisAlignment:
+                      if (snapshot.data!.isEmpty) {
+                        return const Center(
+                          child: Text(
+                            'Hoy no hay cobranzas',
+                            style: TextStyle(
+                                fontSize: 30,
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        );
+                      }
+                      return ListView.builder(
+                        itemCount: listPayment.length,
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: (context, int index) {
+                          _customer = creditService.getCustomerByCreditId(
+                              listPayment[index].creditId.toString());
+                          Color colorStatus = Colors.grey;
+                          String labelStatus = 'E';
+                          if (listPayment[index].status == "PENDIENTE") {
+                            colorStatus = Colors.red;
+                            labelStatus = 'D';
+                          } else if (listPayment[index].status == "PAGADO") {
+                            colorStatus = Colors.green;
+                            labelStatus = 'P';
+                          }
+                          return SizedBox(
+                            height: 80,
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                  side: const BorderSide(color: Colors.transparent),
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: FutureBuilder<Customer>(
+                                  future: _customer,
+                                  builder: (context, snap) {
+                                    if (snapshot.hasData) {
+                                      if (snap.data == null) {
+                                        return const Center(
+                                            child: LinearProgressIndicator());
+                                      }
+                                      Customer customer = snap.data!;
+                                      return Row(
+                                        mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
                                             CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Nro',
-                                            style: TextStyle(
-                                                color: Styles.backgroundOrange),
-                                          ),
-                                          Text((index + 1).toString()),
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            children: const [
-                                              Icon(Icons.calendar_month,color: Colors.red,),
+                                            children: [
                                               Text(
-                                                'Fecha',
+                                                'Nro',
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.bold),
+                                                    color: Styles.backgroundOrange),
                                               ),
+                                              Text((index + 1).toString()),
                                             ],
                                           ),
-                                          Text(listPayment[index]
-                                              .date.toString()),
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
+                                          Column(
+                                            crossAxisAlignment:
                                             CrossAxisAlignment.center,
-                                        children: [
-                                          Row(
                                             children: [
-                                              const Icon(
-                                                Icons.person,
-                                                color: Colors.yellow,
-                                              ),
-                                              Text(
-                                                'Cliente',
-                                                style: TextStyle(
-                                                    color: Styles.blueDark,
-                                                    fontWeight:
+                                              Row(
+                                                children: const [
+                                                  Icon(
+                                                    Icons.calendar_month,
+                                                    color: Colors.red,
+                                                  ),
+                                                  Text(
+                                                    'Fecha',
+                                                    style: TextStyle(
+                                                        fontWeight:
                                                         FontWeight.bold),
+                                                  ),
+                                                ],
                                               ),
+                                              Text(listPayment[index]
+                                                  .date
+                                                  .toString()),
                                             ],
                                           ),
-                                          Text(customer.name.toString()),
-                                          Text(customer.lastName.toString())
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
+                                          Column(
+                                            crossAxisAlignment:
                                             CrossAxisAlignment.center,
-                                        children: [
-                                          Row(
                                             children: [
-                                              const Icon(
-                                                Icons.home,
-                                                color: Colors.brown,
-                                              ),
-                                              Text(
-                                                'Direccion',
-                                                style: TextStyle(
-                                                    color: Styles.blueDark,
-                                                    fontWeight:
+                                              Row(
+                                                children: [
+                                                  const Icon(
+                                                    Icons.person,
+                                                    color: Colors.yellow,
+                                                  ),
+                                                  Text(
+                                                    'Cliente',
+                                                    style: TextStyle(
+                                                        color: Styles.blueDark,
+                                                        fontWeight:
                                                         FontWeight.bold),
+                                                  ),
+                                                ],
                                               ),
+                                              Text(customer.name.toString()),
+                                              Text(customer.lastName.toString())
                                             ],
                                           ),
-                                          Text(customer.address.toString())
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              const Icon(
-                                                Icons.phone,
-                                                color: Colors.blue,
-                                              ),
-                                              Text(
-                                                'Cell',
-                                                style: TextStyle(
-                                                    color: Styles.blueDark,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ],
-                                          ),
-                                          Text(customer.phoneNumber.toString())
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              const Icon(
-                                                Icons.attach_money,
-                                                color: Colors.green,
-                                              ),
-                                              Text('Cuota(S/)',
+                                          /*Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.home,
+                                                  color: Colors.brown,
+                                                ),
+                                                Text(
+                                                  'Direccion',
                                                   style: TextStyle(
                                                       color: Styles.blueDark,
                                                       fontWeight:
-                                                          FontWeight.bold)),
-                                            ],
-                                          ),
-                                          Text(listPayment[index]
-                                              .payment
-                                              .toString())
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              const Icon(
-                                                Icons.handshake_sharp,
-                                                color: Colors.red,
-                                              ),
-                                              Text(
-                                                'Metodo Pago',
-                                                style: TextStyle(
-                                                    color: Styles.blueDark,
-                                                    fontWeight:
-                                                    FontWeight.bold),
-                                              ),
-                                            ],
-                                          ),
-                                          Text(listPayment[index].paymentMethod.toString())
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              const Icon(
-                                                Icons.money,
-                                                color: Colors.green,
-                                              ),
-                                              Text(
-                                                'Monto Pago',
-                                                style: TextStyle(
-                                                    color: Styles.blueDark,
-                                                    fontWeight:
-                                                    FontWeight.bold),
-                                              ),
-                                            ],
-                                          ),
-                                          Text(listPayment[index].customerPayment.toString())
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Estado',
-                                            style: TextStyle(
-                                                color: Styles.blueDark,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Container(
-                                              height: 25,
-                                              width: 20,
-                                              decoration: BoxDecoration(
-                                                  color: colorStatus),
-                                              child: Center(
-                                                child: Text(
-                                                  labelStatus,
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 23),
+                                                          FontWeight.bold),
                                                 ),
-                                              ))
-                                        ],
-                                      ),
-
-                                      Column(
-                                        crossAxisAlignment:
+                                              ],
+                                            ),
+                                            Text(customer.address.toString())
+                                          ],
+                                        ),*/
+                                          Column(
+                                            crossAxisAlignment:
                                             CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Acciones',
-                                            style: TextStyle(
-                                                color: Styles.blueDark,
-                                                fontWeight: FontWeight.bold),
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  const Icon(
+                                                    Icons.phone,
+                                                    color: Colors.blue,
+                                                  ),
+                                                  Text(
+                                                    'Cell',
+                                                    style: TextStyle(
+                                                        color: Styles.blueDark,
+                                                        fontWeight:
+                                                        FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                              Text(customer.phoneNumber.toString())
+                                            ],
                                           ),
-                                          ElevatedButton(
-                                              onPressed: () async {
-                                                // listPayment[index] = await paymentService.setPayment(listPayment[index].id.toString());
-                                                showDialogPayment(index, customer);
+                                          Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  const Icon(
+                                                    Icons.attach_money,
+                                                    color: Colors.green,
+                                                  ),
+                                                  Text('Cuota(S/)',
+                                                      style: TextStyle(
+                                                          color: Styles.blueDark,
+                                                          fontWeight:
+                                                          FontWeight.bold)),
+                                                ],
+                                              ),
+                                              Text(listPayment[index]
+                                                  .payment
+                                                  .toString())
+                                            ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  const Icon(
+                                                    Icons.handshake_sharp,
+                                                    color: Colors.red,
+                                                  ),
+                                                  Text(
+                                                    'Metodo Pago',
+                                                    style: TextStyle(
+                                                        color: Styles.blueDark,
+                                                        fontWeight:
+                                                        FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                              Text(listPayment[index]
+                                                  .paymentMethod
+                                                  .toString())
+                                            ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  const Icon(
+                                                    Icons.money,
+                                                    color: Colors.green,
+                                                  ),
+                                                  Text(
+                                                    'Monto Pago',
+                                                    style: TextStyle(
+                                                        color: Styles.blueDark,
+                                                        fontWeight:
+                                                        FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                              Text(listPayment[index]
+                                                  .customerPayment
+                                                  .toString())
+                                            ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'Estado',
+                                                style: TextStyle(
+                                                    color: Styles.blueDark,
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                              Container(
+                                                  height: 25,
+                                                  width: 20,
+                                                  decoration: BoxDecoration(
+                                                      color: colorStatus),
+                                                  child: Center(
+                                                    child: Text(
+                                                      labelStatus,
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          fontSize: 23),
+                                                    ),
+                                                  ))
+                                            ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'Acciones',
+                                                style: TextStyle(
+                                                    color: Styles.blueDark,
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  ElevatedButton(
+                                                      onPressed: () {
+                                                        showDialogPayment(
+                                                            index, customer);
+                                                        setState(() {});
+                                                        if (sumOfPaymentsPaid <=
+                                                            sumOfPayments) {
+                                                          setState(() {
+                                                            sumOfPaymentsPaid +=
+                                                            listPayment[index]
+                                                                .payment!;
+                                                          });
+                                                        } else {
+                                                          sumOfPaymentsPaid += 0;
+                                                        }
+                                                      },
+                                                      child: Icon(Icons.paid)),
+                                                  const SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  ElevatedButton(
+                                                      onPressed: () async{
+                                                        Credit credit = await creditService.getCreditbyId(listPayment[index].creditId.toString());
+                                                        Navigator.of(context).push(MaterialPageRoute(
+                                                          builder: (context) => CustomerCreditDetail(credit: credit, customer: customer),
+                                                        ));
+                                                      },
+                                                      child: const Icon(Icons.remove_red_eye_outlined)),
+                                                ],
+                                              ),
 
-                                                setState(() {});
-                                                if (sumOfPaymentsPaid <=
-                                                    sumOfPayments) {
-                                                  setState(() {
-                                                    sumOfPaymentsPaid +=
-                                                        listPayment[index]
-                                                            .payment!;
-                                                  });
-                                                } else {
-                                                  sumOfPaymentsPaid += 0;
-                                                }
-                                              },
-                                              child:
-                                                  Icon(Icons.monetization_on))
+                                            ],
+                                          ),
                                         ],
-                                      ),
-                                    ],
-                                  );
-                                } else if (snapshot.hasError) {
-                                  print(snapshot.error);
-                                  return Text('${snapshot.error}');
-                                }
-                                return Center(
-                                    child: CircularProgressIndicator());
-                              }),
-                        ),
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      print(snapshot.error);
+                                      return Text('${snapshot.error}');
+                                    }
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  }),
+                            ),
+                          );
+                        },
                       );
-                    },
-                  );
-                } else if (snapshot.hasError) {
-                  print('${snapshot.error}');
-                  return Text('error: ${snapshot.error}');
-                }
-                return const Center(child: CircularProgressIndicator());
-              },
-            )),
-          ]
+                    } else if (snapshot.hasError) {
+                      print('${snapshot.error}');
+                      return Text('error: ${snapshot.error}');
+                    }
+                    return const Center(child: CircularProgressIndicator());
+                  },
+                )),
+          ]),
         ),
+      ]
     );
   }
 }
