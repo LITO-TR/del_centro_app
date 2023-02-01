@@ -1,4 +1,5 @@
 import 'package:del_centro_app/layouts/layout.dart';
+import 'package:del_centro_app/src/features/sign-in/sign_in_page.dart';
 import 'package:del_centro_app/src/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blueGrey,
           fontFamily: 'Inter',
           scaffoldBackgroundColor: Styles.scaffoldBackgroundColor),
-      home: const Layout(),
+      home: const SimpleLoginScreen(),
     );
   }
 }
