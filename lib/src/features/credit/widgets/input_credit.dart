@@ -8,7 +8,8 @@ class InputCredit extends StatefulWidget {
   final String suffix;
   final String prefix;
   final double width;
-  const InputCredit({Key? key, required this.name, required this.controller, required this.suffix, required this.prefix, required this.width }) : super(key: key);
+  final TextInputType type;
+  const InputCredit({Key? key, required this.name, required this.controller, required this.suffix, required this.prefix, required this.width, required this.type }) : super(key: key);
 
   @override
   State<InputCredit> createState() => _InputCreditState();
@@ -36,9 +37,11 @@ class _InputCreditState extends State<InputCredit> {
               height: 45,
               width: widget.width,
               child: TextFormField(
+                keyboardType: widget.type,
                 autofocus: true,
                 controller: widget.controller,
                 decoration: InputDecoration(
+
                   suffixText: widget.suffix,
                   prefixText: widget.prefix,
                   border: OutlineInputBorder(
