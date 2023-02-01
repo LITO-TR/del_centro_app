@@ -26,48 +26,50 @@ class _LayoutState extends State<Layout> {
     Widget build(BuildContext context) {
       return Scaffold(
 
-        body: Row(
-          children:[
-            NavigationRail(
-              selectedIconTheme: IconThemeData(color: Styles.backgroundOrange),
-              backgroundColor: Styles.blueDark,
-              selectedIndex: _selectedIndex,
-              groupAlignment: groupAlignment,
-              onDestinationSelected: (int index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
-              labelType: labelType,
-              leading: Avatar(),
-              destinations:  <NavigationRailDestination>[
-                NavigationRailDestination(
-                  icon: const Icon(Icons.monetization_on),
-                  selectedIcon: Icon(Icons.monetization_on),
-                  label: Text('Cobrar',style: TextStyle(color: Styles.backgroundOrange),),
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.credit_card),
-                  selectedIcon: const Icon(Icons.credit_card),
-                  label: Text('Credito',style: TextStyle(color: Styles.backgroundOrange),),
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.person_outline),
-                  selectedIcon: const Icon(Icons.person),
-                  label: Text('Clientes',style: TextStyle(color: Styles.backgroundOrange),),
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.balance_outlined),
-                  selectedIcon: Icon(Icons.balance),
-                  label: Text('Cuadrar',style: TextStyle(color: Styles.backgroundOrange),),
-                ),
-              ],
-            ),
-            const VerticalDivider(thickness: 1, width: 1),
-            // This is the main content.
-            Expanded(child: _widgetOptions.elementAt(_selectedIndex)),
+        body: SafeArea(
+          child: Row(
+            children:[
+              NavigationRail(
+                selectedIconTheme: IconThemeData(color: Styles.backgroundOrange),
+                backgroundColor: Styles.blueDark,
+                selectedIndex: _selectedIndex,
+                groupAlignment: groupAlignment,
+                onDestinationSelected: (int index) {
+                  setState(() {
+                    _selectedIndex = index;
+                  });
+                },
+                labelType: labelType,
+                leading: const Avatar(),
+                destinations:  <NavigationRailDestination>[
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.monetization_on),
+                    selectedIcon: const Icon(Icons.monetization_on),
+                    label: Text('Cobrar',style: TextStyle(color: Styles.backgroundOrange),),
+                  ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.credit_card),
+                    selectedIcon: const Icon(Icons.credit_card),
+                    label: Text('Credito',style: TextStyle(color: Styles.backgroundOrange),),
+                  ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.person_outline),
+                    selectedIcon: const Icon(Icons.person),
+                    label: Text('Clientes',style: TextStyle(color: Styles.backgroundOrange),),
+                  ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.balance_outlined),
+                    selectedIcon: const Icon(Icons.balance),
+                    label: Text('Cuadrar',style: TextStyle(color: Styles.backgroundOrange),),
+                  ),
+                ],
+              ),
+              const VerticalDivider(thickness: 1, width: 1),
+              // This is the main content.
+              Expanded(child: _widgetOptions.elementAt(_selectedIndex)),
 
-          ],
+            ],
+          ),
         ),
       );
     }
