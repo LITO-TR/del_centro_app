@@ -49,30 +49,30 @@ class _CustomerPageState extends State<CustomerPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  InputCredit(name: 'Nombres', controller: txtName, suffix: '', prefix: '', width: 300),
+                  InputCredit(name: 'Nombres', controller: txtName, suffix: '', prefix: '', width: 300,type: TextInputType.text),
                   const SizedBox(
                     height: 15,
                   ),
-                  InputCredit(name: 'Apellidos', controller: txtLastName, suffix: '', prefix: '', width: 300),
+                  InputCredit(name: 'Apellidos', controller: txtLastName, suffix: '', prefix: '', width: 300,type: TextInputType.text),
                   const SizedBox(
                     height: 15,
                   ),
-                  InputCredit(name: 'DNI', controller: txtDNI, suffix: '', prefix: '', width: 300),
+                  InputCredit(name: 'DNI', controller: txtDNI, suffix: '', prefix: '', width: 300,type: TextInputType.number),
 
                   const SizedBox(
                     height: 15,
                   ),
-                  InputCredit(name: 'Direccion', controller: txtAddress, suffix: '', prefix: '', width: 300),
+                  InputCredit(name: 'Direccion', controller: txtAddress, suffix: '', prefix: '', width: 300,type: TextInputType.text),
 
                   const SizedBox(
                     height: 15,
                   ),
-                  InputCredit(name: 'Cell', controller: txtPhoneNumber, suffix: '', prefix: '', width: 300),
+                  InputCredit(name: 'Cell', controller: txtPhoneNumber, suffix: '', prefix: '', width: 300,type: TextInputType.number),
 
                   const SizedBox(
                     height: 15,
                   ),
-                  InputCredit(name: 'Estado Civil', controller: txtCivilStatus, suffix: '', prefix: '', width: 300),
+                  InputCredit(name: 'Estado Civil', controller: txtCivilStatus, suffix: '', prefix: '', width: 300,type: TextInputType.text),
                 ],
               ),
             ),
@@ -107,187 +107,191 @@ class _CustomerPageState extends State<CustomerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: AlignmentDirectional.topEnd,
+    return ListView(
       children: [
-        Column(
+        Stack(
+          alignment: AlignmentDirectional.topEnd,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-                  child:Container(
-                    width: MediaQuery.of(context).size.width / 3,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
-                      color: Styles.white,
-                    ),
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.search),
-                          border: OutlineInputBorder(borderSide: BorderSide.none)),
-                    ),
-                  ),
-            ),
-            FutureBuilder<List<Customer>>(
-                future: _customers,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Container(
-                      decoration: const BoxDecoration(),
-                      width: MediaQuery.of(context).size.width / 1.1,
-                      height: MediaQuery.of(context).size.height *0.8,
-                      child: GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 4,
-                                  crossAxisSpacing: 4.0,
-                                  mainAxisSpacing: 4.0,
-                                  childAspectRatio: 2.7),
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (context, index) {
-                            var customer = snapshot.data![index];
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                      child:Container(
+                        width: MediaQuery.of(context).size.width / 3,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(40),
+                          color: Styles.white,
+                        ),
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                              prefixIcon: Icon(Icons.search),
+                              border: OutlineInputBorder(borderSide: BorderSide.none)),
+                        ),
+                      ),
+                ),
+                FutureBuilder<List<Customer>>(
+                    future: _customers,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Container(
+                          decoration: const BoxDecoration(),
+                          width: MediaQuery.of(context).size.width / 1.1,
+                          height: MediaQuery.of(context).size.height *0.8,
+                          child: GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 4,
+                                      crossAxisSpacing: 4.0,
+                                      mainAxisSpacing: 4.0,
+                                      childAspectRatio: 2.7),
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (context, index) {
+                                var customer = snapshot.data![index];
 
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            CustomerCredits(customer: customer)));
-                              },
-                              child: Card(
-                                elevation: 4,
-                                color: Styles.white,
-                                shape: RoundedRectangleBorder(
-                                    side:
-                                        const BorderSide(color: Colors.transparent),
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 10),
-                                  child: Column(
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            '${customer.name} ',
-                                            style: TextStyle(
-                                                color: Styles.blueDark,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                            customer.lastName.toString(),
-                                            style: TextStyle(
-                                                color: Styles.backgroundOrange,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CustomerCredits(customer: customer)));
+                                  },
+                                  child: Card(
+                                    elevation: 4,
+                                    color: Styles.white,
+                                    shape: RoundedRectangleBorder(
+                                        side:
+                                            const BorderSide(color: Colors.transparent),
+                                        borderRadius: BorderRadius.circular(20)),
+                                    child: Container(
+                                      padding:
+                                          const EdgeInsets.symmetric(horizontal: 10),
+                                      child: Column(
                                         children: [
                                           Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                '${customer.name} ',
+                                                style: TextStyle(
+                                                    color: Styles.blueDark,
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                              Text(
+                                                customer.lastName.toString(),
+                                                style: TextStyle(
+                                                    color: Styles.backgroundOrange,
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
-                                                    const Icon(
-                                                      Icons.credit_card_outlined,
-                                                      color: Colors.blue,
+                                                    Row(
+                                                      children: [
+                                                        const Icon(
+                                                          Icons.credit_card_outlined,
+                                                          color: Colors.blue,
+                                                        ),
+                                                        Text(
+                                                          customer.dni.toString(),
+                                                          style: const TextStyle(
+                                                              color: Colors.grey),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    Text(
-                                                      customer.dni.toString(),
-                                                      style: const TextStyle(
-                                                          color: Colors.grey),
-                                                    ),
-                                                  ],
+                                                    Row(
+                                                      children: [
+                                                        const Icon(
+                                                          Icons.call,
+                                                          color: Colors.green,
+                                                        ),
+                                                        Text(
+                                                          customer.phoneNumber.toString(),
+                                                          style: TextStyle(
+                                                              color: Colors.grey),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  ]),
+                                              SizedBox(
+                                                child: FutureBuilder<List<Credit>>(
+                                                  future: customerService.getCreditsByCustomer(
+                                                      customer.id.toString()),
+                                                  builder: (context, snapshot) {
+                                                    if (snapshot.hasData) {
+                                                      List<Credit> credits =
+                                                          snapshot.data!;
+                                                      creditsList = credits;
+                                                      IconData icon =
+                                                          Icons.check_circle;
+                                                      Color color = Colors.black;
+                                                      if (credits.length >= 8) {
+                                                        icon = Icons.emoji_events;
+                                                        color = Colors.amberAccent;
+                                                      } else if (credits.length < 8 && credits.isNotEmpty) {
+                                                        icon = Icons
+                                                            .emoji_emotions_outlined;
+                                                        color = Colors.deepPurple;
+                                                      }
+                                                      else if(credits.length == 0){
+                                                        icon = Icons.child_care;
+                                                        color = Colors.teal;
+                                                      }
+                                                      return Column(
+                                                        children: [
+                                                          Text(
+                                                            '${credits.length} Creditos',
+                                                            style: const TextStyle(
+                                                                color: Colors.grey),
+                                                          ),
+                                                    Icon(icon, color: color,size: 30,)
+                                                        ],
+                                                      );
+                                                    }
+                                                    return const CircularProgressIndicator();
+                                                  },
                                                 ),
-                                                Row(
-                                                  children: [
-                                                    const Icon(
-                                                      Icons.call,
-                                                      color: Colors.green,
-                                                    ),
-                                                    Text(
-                                                      customer.phoneNumber.toString(),
-                                                      style: TextStyle(
-                                                          color: Colors.grey),
-                                                    ),
-                                                  ],
-                                                )
-                                              ]),
-                                          SizedBox(
-                                            child: FutureBuilder<List<Credit>>(
-                                              future: customerService.getCreditsByCustomer(
-                                                  customer.id.toString()),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.hasData) {
-                                                  List<Credit> credits =
-                                                      snapshot.data!;
-                                                  creditsList = credits;
-                                                  IconData icon =
-                                                      Icons.check_circle;
-                                                  Color color = Colors.black;
-                                                  if (credits.length >= 8) {
-                                                    icon = Icons.emoji_events;
-                                                    color = Colors.amberAccent;
-                                                  } else if (credits.length < 8 && credits.isNotEmpty) {
-                                                    icon = Icons
-                                                        .emoji_emotions_outlined;
-                                                    color = Colors.deepPurple;
-                                                  }
-                                                  else if(credits.length == 0){
-                                                    icon = Icons.child_care;
-                                                    color = Colors.teal;
-                                                  }
-                                                  return Column(
-                                                    children: [
-                                                      Text(
-                                                        '${credits.length} Creditos',
-                                                        style: const TextStyle(
-                                                            color: Colors.grey),
-                                                      ),
-                                                Icon(icon, color: color,size: 30,)
-                                                    ],
-                                                  );
-                                                }
-                                                return const CircularProgressIndicator();
-                                              },
-                                            ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                            );
-                          }),
-                    );
-                  }
-                  if(snapshot.hasError){
-                    return Center(child: Text(snapshot.error.toString()),);
-                  }
-                  return const Center(child: CircularProgressIndicator());
-                }),
+                                );
+                              }),
+                        );
+                      }
+                      if(snapshot.hasError){
+                        return Center(child: Text(snapshot.error.toString()),);
+                      }
+                      return const Center(child: CircularProgressIndicator());
+                    }),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FloatingActionButton(
+                elevation: 10,
+                onPressed: (){
+                  showForm();
+                  // return const CustomerRegisterDialog(customers: _customers,);
+                },
+                child: Icon(Icons.add),
+                backgroundColor: Colors.green,
+
+              ),
+            )
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: FloatingActionButton(
-            elevation: 10,
-            onPressed: (){
-              showForm();
-              // return const CustomerRegisterDialog(customers: _customers,);
-            },
-            child: Icon(Icons.add),
-            backgroundColor: Colors.green,
-
-          ),
-        )
       ],
     );
   }
