@@ -6,7 +6,8 @@ import 'package:del_centro_app/src/core/models/payment.dart';
 import 'package:http/http.dart' as http;
 
 class CreditService {
-   String url = "http://localhost:9000/api/credits";
+  String url = 'https://del-centro-api.azurewebsites.net/api/credits';
+   //String url = "http://localhost:9000/api/credits";
    //String url = "http://10.0.2.2:9000/api/credits";
 
 
@@ -54,5 +55,12 @@ class CreditService {
    Future<Customer> getCustomerByCreditId(String creditId)async{
      final res = await http.get(Uri.parse('$url/$creditId/customer'));
      return customerFromJson(res.body);
+   }
+   Future<List<Credit>> getCreditsByCreationDate(String day, String month, String year) async{
+     final res = await http.get(Uri.parse('$url/day/$day/month/$month/year/$year'));
+
+     return creditFromJson(res.body);
+
+
    }
 }
