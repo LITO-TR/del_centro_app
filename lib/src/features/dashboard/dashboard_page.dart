@@ -36,9 +36,6 @@ class _DashboardPage extends State<DashboardPage> {
   TextEditingController txtDay = TextEditingController();
   TextEditingController txtMonth = TextEditingController();
   TextEditingController txtYear = TextEditingController();
-
-  //TextEditingController dateController = TextEditingController();
-
   @override
   void initState() {
     // TODO: implement initState
@@ -47,9 +44,6 @@ class _DashboardPage extends State<DashboardPage> {
     txtDay.text = 'd';
     txtMonth.text = 'mm';
     txtYear.text = 'yyyy';
-    //sumOfPayments =0.0;
-    //sumOfPaymentsPaid=0.0;
-    // dateController.text = "";
 
     super.initState();
   }
@@ -189,8 +183,11 @@ class _DashboardPage extends State<DashboardPage> {
             ],
           );
         });
-    //return paymentService.setPayment(payment.id.toString(), dropDownValue,
-    //  double.parse(txtCustomerPayment.text));
+
+  }
+
+  showDataPicker(){
+
   }
 
   @override
@@ -202,83 +199,6 @@ class _DashboardPage extends State<DashboardPage> {
           height: MediaQuery.of(context).size.height*0.95,
           child:
           Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-           /* Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: MediaQuery.of(context).size.height * 0.2,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(13),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    width: 200,
-                    height: 100,
-                    decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          sumOfPayments.toStringAsFixed(2),
-                          style: const TextStyle(fontSize: 35, color: Colors.white),
-                        ),
-                        Text(
-                          'Monto por cobrar',
-                          style: TextStyle(
-                              color: Styles.blueDark, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: 200,
-                    height: 100,
-                    decoration: BoxDecoration(
-                        color: Styles.blueDark,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          sumOfPaymentsPaid.toStringAsFixed(2),
-                          style: const TextStyle(fontSize: 35, color: Colors.white),
-                        ),
-                        Text(
-                          'Monto cobrado',
-                          style: TextStyle(
-                              color: Styles.backgroundOrange,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: 200,
-                    height: 100,
-                    decoration: BoxDecoration(
-                        color: Styles.blueDark,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          '123',
-                          style: TextStyle(fontSize: 35, color: Colors.white),
-                        ),
-                        Text(
-                          'Monto desembolsado',
-                          style: TextStyle(
-                              color: Styles.backgroundOrange,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),*/
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -301,6 +221,18 @@ class _DashboardPage extends State<DashboardPage> {
                     },
                   ),
                 ),
+                MaterialButton(onPressed: ()async{
+
+                  DateTime? current = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2022),
+                      lastDate: DateTime(2024),
+                  );
+                  print(current);
+
+                },
+                child: const Text('date'),),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
