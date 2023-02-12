@@ -4,7 +4,7 @@ import 'package:del_centro_app/src/core/models/credit.dart';
 import 'package:del_centro_app/src/core/models/customer.dart';
 import 'package:del_centro_app/src/core/models/payment.dart';
 import 'package:del_centro_app/src/features/credit/widgets/input_credit.dart';
-import 'package:del_centro_app/src/features/customers/widgets/customer_credit_detail.dart';
+import 'package:del_centro_app/src/features/customers/screen/customer_credit_detail.dart';
 import 'package:del_centro_app/src/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -54,12 +54,6 @@ class _DashboardPage extends State<DashboardPage> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    print('entreeeee');
-    super.dispose();
-  }
 
   showDialogPayment(int index, Customer customer) {
     showDialog(
@@ -205,7 +199,7 @@ class _DashboardPage extends State<DashboardPage> {
       children: [
         SizedBox(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height*0.95,
           child:
           Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
            /* Container(
@@ -364,7 +358,7 @@ class _DashboardPage extends State<DashboardPage> {
             ),
             Container(
                 width: MediaQuery.of(context).size.width * 0.9,
-                height: MediaQuery.of(context).size.height * 0.7,
+                height: MediaQuery.of(context).size.height * 0.8,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(13),
                 ),
@@ -680,7 +674,8 @@ class _DashboardPage extends State<DashboardPage> {
                                       return Text('${snapshot.error}');
                                     }
                                     return const Center(
-                                        child: CircularProgressIndicator());
+                                        child: CircularProgressIndicator(
+                                        ));
                                   }),
                             ),
                           );
