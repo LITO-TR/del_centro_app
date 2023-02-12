@@ -145,13 +145,11 @@ final txtCost = TextEditingController();
                         double suma = 0;
                         for(int i = 0; i<listPayments.length; i++){
                           suma += listPayments[i].payment!;
-
-                          print(suma);
                         }
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Center(child: Text('${listPayments.length} pago programado',style: TextStyle(fontWeight: FontWeight.bold)),),
+                            Center(child: Text('${listPayments.length} pagos programados',style: TextStyle(fontWeight: FontWeight.bold)),),
                             const Icon(Icons.arrow_forward_ios,size: 70,color: Colors.blue,),
                             Center(child: Text(suma.toString())),
                           ],
@@ -175,15 +173,17 @@ final txtCost = TextEditingController();
                         List<Payment> listPayments = snapshot.data!;
                         double suma = 0;
                         double deposit = 0;
+                        int sizePayment = 0;
                         double money = 0;
                         for(int i = 0; i<listPayments.length; i++){
                           suma += listPayments[i].customerPayment!;
                             if(listPayments[i].paymentMethod == "EFECTIVO"){
+                                  sizePayment += 1;
                                 money+=listPayments[i].customerPayment!;
                             }else if(listPayments[i].paymentMethod == "DEPOSITO"){
+                                  sizePayment += 1;
                                 deposit+=listPayments[i].customerPayment!;
                             }
-                          print(suma);
                         }
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -191,8 +191,7 @@ final txtCost = TextEditingController();
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Center(child: Text('${listPayments.length} pagos cobrados',style: TextStyle(fontWeight: FontWeight.bold)),),
-                                const Center(child: Text('Cantidad por Metodo de pago',style: TextStyle(fontWeight: FontWeight.bold)),),
+                                Center(child: Text('${sizePayment} pagos cobrados',style: TextStyle(fontWeight: FontWeight.bold)),),
                               ],
                             ),
                             Icon(Icons.arrow_forward_ios,size: 70,color: Colors.red),
@@ -201,7 +200,7 @@ final txtCost = TextEditingController();
                               children: [
                                 Center(child: Text(suma.toString())),
                                 Center(child: Text('$money en efectivo'),),
-                                Center(child: Text('${deposit} en depositos'))
+                                Center(child: Text('$deposit en depositos'))
 
                               ],
                             ),
