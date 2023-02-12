@@ -28,7 +28,7 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
   static const List<String> list = <String>['EFECTIVO', 'DEPOSITO'];
   String dropDownValue = list.first;
 
-  TextStyle style = TextStyle(color: Colors.white, fontWeight: FontWeight.bold);
+  TextStyle style = const TextStyle(color: Colors.white, fontWeight: FontWeight.bold);
   @override
   void initState() {
     // TODO: implement initState
@@ -173,13 +173,11 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
         centerTitle: true,
         backgroundColor: Styles.blueDark,
       ),
-      body: ListView(
-        children: [
-          SizedBox(
+      body: SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
                   height: MediaQuery.of(context).size.height * 0.35,
@@ -233,7 +231,7 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
                   ),
                 ),
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.5,
+                  height: MediaQuery.of(context).size.height * 0.45,
                   width: MediaQuery.of(context).size.width * 1,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
@@ -364,8 +362,7 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
               ],
             ),
           ),
-        ],
-      ),
+
     );
   }
 }
