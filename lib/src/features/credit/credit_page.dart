@@ -259,6 +259,10 @@ class _CreditPageState extends State<CreditPage> {
                                 dropDownValue,
                                 0.5,
                                 customerSelected);
+                              txtCreditAmount.clear();
+                              txtInterest.clear();
+                              txtNumberOfPayments.clear();
+
                           });
                         },
                       )),
