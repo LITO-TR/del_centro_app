@@ -38,7 +38,7 @@ class _InputCreditState extends State<InputCredit> {
               width: widget.width,
               child: TextFormField(
                 keyboardType: widget.type,
-                autofocus: true,
+                autofocus: false,
                 controller: widget.controller,
                 decoration: InputDecoration(
 
