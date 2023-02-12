@@ -3,6 +3,7 @@ import 'package:del_centro_app/src/features/shared/widgets/avatar.dart';
 import 'package:del_centro_app/src/features/credit/credit_page.dart';
 import 'package:del_centro_app/src/features/customers/customer_page.dart';
 import 'package:del_centro_app/src/features/dashboard/dashboard_page.dart';
+import 'package:del_centro_app/src/features/test/customer_list.dart';
 import 'package:flutter/material.dart';
 import 'package:del_centro_app/src/styles/styles.dart';
 class Layout extends StatefulWidget {
@@ -17,7 +18,8 @@ class _LayoutState extends State<Layout> {
     DashboardPage(),
     CreditPage(),
     CustomerPage(),
-    BalancePage()
+    BalancePage(),
+    Hola(),
   ];
     int _selectedIndex = 0;
     NavigationRailLabelType labelType = NavigationRailLabelType.selected;
@@ -62,12 +64,23 @@ class _LayoutState extends State<Layout> {
                     selectedIcon: const Icon(Icons.balance),
                     label: Text('Cuadrar',style: TextStyle(color: Styles.backgroundOrange),),
                   ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.transfer_within_a_station),
+                    selectedIcon: const Icon(Icons.transfer_within_a_station),
+                    label: Text('Test',style: TextStyle(color: Styles.backgroundOrange),),
+                  ),
                 ],
               ),
               const VerticalDivider(thickness: 1, width: 1),
               // This is the main content.
-              Expanded(child: _widgetOptions.elementAt(_selectedIndex)),
-
+                  Expanded(
+                      child: PageView(
+                        scrollDirection: Axis.vertical,
+                        children: [
+                          _widgetOptions.elementAt(_selectedIndex),
+                        ],
+                      )
+                  ),
             ],
           ),
         ),
