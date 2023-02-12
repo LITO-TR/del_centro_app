@@ -6,10 +6,10 @@ import 'package:del_centro_app/src/core/models/payment.dart';
 import 'package:http/http.dart' as http;
 
 class CreditService {
-  String url = 'https://del-centro-api.azurewebsites.net/api/credits';
+  // String url = 'https://del-centro-api.azurewebsites.net/api/credits';
    //String url = "http://localhost:9000/api/credits";
    //String url = "http://10.0.2.2:9000/api/credits";
-
+   String url = "https://del-centro-api.herokuapp.com/api/credits";
 
 
    Future<Credit> createCredit(double creditAmount,double decimalInterest, int numberOfPayments, String paymentMethod, mora,Customer customer) async {
@@ -46,11 +46,6 @@ class CreditService {
     print(paymentFromJson(res.body));
     return paymentFromJson(res.body);
   }
-  Future<List<Payment>> setPayment(String paymentId) async{
-    final res = await http.put(Uri.parse('$url/payment/$paymentId'));
-    print('entre ${paymentFromJson(res.body)}');
-    return paymentFromJson(res.body);
-  }
 
    Future<Customer> getCustomerByCreditId(String creditId)async{
      final res = await http.get(Uri.parse('$url/$creditId/customer'));
@@ -58,9 +53,23 @@ class CreditService {
    }
    Future<List<Credit>> getCreditsByCreationDate(String day, String month, String year) async{
      final res = await http.get(Uri.parse('$url/day/$day/month/$month/year/$year'));
-
      return creditFromJson(res.body);
+   }
+
+   Future<Credit> createCreditExtension(String creditId, double creditAmount,double decimalInterest, int numberOfPayments, String paymentMethod, mora)async{
+     var objExt = {
+       "creditAmount": creditAmount,
+        "decimalInterest": decimalInterest,
+       "numberOfPayments": numberOfPayments,
+      "paymentMethod": paymentMethod,
+       "mora": mora
+     };
+     final headers = {"Content-Type": "application/json;charset=UTF-8"};
 
 
+     final res = await http.post(Uri.parse('$url/$creditId/extension'),body: jsonEncode(objExt),headers: headers);
+
+      return creditJson(res.body);
    }
 }
+
