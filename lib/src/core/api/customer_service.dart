@@ -6,9 +6,9 @@ import 'package:del_centro_app/src/core/models/customer.dart';
 import 'package:http/http.dart' as http;
 class CustomerService{
 
-  String url = 'https://del-centro-api.azurewebsites.net/api/customers';
+  //String url = 'https://del-centro-api.azurewebsites.net/api/customers';
 
-
+   String url = "https://del-centro-api.herokuapp.com/api/customers";
   //String url = "http://localhost:9000/api/customers";
 
   //String url = "http://10.0.2.2:9000/api/customers";
@@ -42,5 +42,9 @@ class CustomerService{
 
     return customerFromJson(res.body);
 
+  }
+  Future<void> deteletCustomer(String customerId) async{
+    final res = await http.delete(Uri.parse('$url/$customerId'));
+    print('deleted: ${res.body}');
   }
 }

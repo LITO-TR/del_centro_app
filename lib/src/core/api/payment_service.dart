@@ -5,9 +5,9 @@ import 'package:http/http.dart' as http;
 class PaymentService {
   //String url = "http://localhost:9000/api/payments";
   // String url = "http://10.0.2.2:9000/api/payments";
-  String url = 'https://del-centro-api.azurewebsites.net/api/payments';
+  // String url = 'https://del-centro-api.azurewebsites.net/api/payments';
 
-
+   String url = "https://del-centro-api.herokuapp.com/api/payments";
 
   /*Future<List<Payment>> setPayment(String paymentId) async{
     final res = await http.put(Uri.parse('$url/$paymentId'));
