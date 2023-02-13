@@ -1,6 +1,6 @@
 import 'package:del_centro_app/src/features/balance/balance_page.dart';
 import 'package:del_centro_app/src/features/shared/widgets/avatar.dart';
-import 'package:del_centro_app/src/features/credit/credit_page.dart';
+import 'package:del_centro_app/src/features/credits/credit_page.dart';
 import 'package:del_centro_app/src/features/customers/customer_page.dart';
 import 'package:del_centro_app/src/features/dashboard/dashboard_page.dart';
 import 'package:del_centro_app/src/features/test/customer_list.dart';

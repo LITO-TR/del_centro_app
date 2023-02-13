@@ -1,5 +1,5 @@
-import 'package:del_centro_app/src/core/api/customer_service.dart';
-import 'package:del_centro_app/src/features/credit/widgets/input_credit.dart';
+import 'package:del_centro_app/src/core/services/customer_service.dart';
+import 'package:del_centro_app/src/features/credits/widgets/input_credit.dart';
 import 'package:del_centro_app/src/features/customers/screen/customer_credits.dart';
 import 'package:del_centro_app/src/features/customers/widgets/customer_card.dart';
 import 'package:del_centro_app/src/features/test/test_provider.dart';
@@ -29,7 +29,6 @@ class _CustomerPageState extends State<CustomerPage> {
   void initState() {
     // TODO: implement initState
     Provider.of<TestProvider>(context,listen: false).getCustomers();
-
     super.initState();
   }
   void showForm() {

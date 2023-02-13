@@ -1,8 +1,8 @@
-import 'package:del_centro_app/src/core/api/credit_service.dart';
-import 'package:del_centro_app/src/core/api/customer_service.dart';
+import 'package:del_centro_app/src/core/services/credit_service.dart';
+import 'package:del_centro_app/src/core/services/customer_service.dart';
 import 'package:del_centro_app/src/core/models/credit.dart';
 import 'package:del_centro_app/src/core/models/customer.dart';
-import 'package:del_centro_app/src/features/credit/widgets/input_credit.dart';
+import 'package:del_centro_app/src/features/credits/widgets/input_credit.dart';
 import 'package:del_centro_app/src/features/shared/widgets/button_with_icon.dart';
 import 'package:del_centro_app/src/styles/styles.dart';
 import 'package:flutter/material.dart';

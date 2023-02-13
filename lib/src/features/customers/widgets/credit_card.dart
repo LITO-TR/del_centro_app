@@ -1,4 +1,4 @@
-import 'package:del_centro_app/src/core/api/credit_service.dart';
+import 'package:del_centro_app/src/core/services/credit_service.dart';
 import 'package:del_centro_app/src/core/models/credit.dart';
 import 'package:del_centro_app/src/core/models/payment.dart';
 import 'package:del_centro_app/src/styles/styles.dart';

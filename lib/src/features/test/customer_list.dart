@@ -1,5 +1,5 @@
-import 'package:del_centro_app/src/core/api/credit_service.dart';
-import 'package:del_centro_app/src/core/api/customer_service.dart';
+import 'package:del_centro_app/src/core/services/credit_service.dart';
+import 'package:del_centro_app/src/core/services/customer_service.dart';
 import 'package:del_centro_app/src/features/test/test_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

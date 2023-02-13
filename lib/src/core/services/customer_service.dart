@@ -18,9 +18,7 @@ class CustomerService{
   final res = await http.get(Uri.parse(url));
 
     return customersFromJson(res.body);
-    //validators
-    //styles for cards
-    //search customer
+
   }
   
   Future<List<Credit>> getCreditsByCustomer(String customerId) async{
