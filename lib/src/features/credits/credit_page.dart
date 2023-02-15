@@ -1,11 +1,15 @@
-import 'package:del_centro_app/src/core/services/credit_service.dart';
-import 'package:del_centro_app/src/core/services/customer_service.dart';
 import 'package:del_centro_app/src/core/models/credit.dart';
 import 'package:del_centro_app/src/core/models/customer.dart';
+import 'package:del_centro_app/src/features/credits/widgets/credit_property_names.dart';
+import 'package:del_centro_app/src/features/credits/widgets/days_payments.dart';
 import 'package:del_centro_app/src/features/credits/widgets/input_credit.dart';
+import 'package:del_centro_app/src/features/customers/widgets/titles_credits.dart';
 import 'package:del_centro_app/src/features/shared/widgets/button_with_icon.dart';
+import 'package:del_centro_app/src/providers/credit_provider.dart';
+import 'package:del_centro_app/src/providers/customer_provider.dart';
 import 'package:del_centro_app/src/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CreditPage extends StatefulWidget {
   const CreditPage({Key? key}) : super(key: key);
@@ -15,7 +19,6 @@ class CreditPage extends StatefulWidget {
 }
 
 class _CreditPageState extends State<CreditPage> {
-
   int _selectedIndex = 0;
 
   static const List<String> list = <String>['day', 'week', 'QUINCENAL'];
@@ -30,16 +33,12 @@ class _CreditPageState extends State<CreditPage> {
   double payments = 0.0;
   String dropDownValue = list.first;
   Future<Credit>? creditCreated;
-  final service = CreditService();
-  late Customer customerSelected;
-
-  late Future<List<Customer>> _customers;
-  final customerService = CustomerService();
+  late Customer _customerSelected;
   @override
   void initState() {
     super.initState();
-    // TODO: implement initState
-    _customers = customerService.getAllCustomers();
+    Provider.of<CustomerProvider>(context, listen: false).getCustomers();
+    _customerSelected = Customer();
     txtCreditAmount.addListener(_getPaymentsAndTotal);
     txtNumberOfPayments.addListener(_getPaymentsAndTotal);
     txtInterest.addListener(_getPaymentsAndTotal);
@@ -72,6 +71,8 @@ class _CreditPageState extends State<CreditPage> {
 
   @override
   Widget build(BuildContext context) {
+    final creditProvider = context.watch<CreditProvider>();
+    final customerProvider = context.watch<CustomerProvider>();
     return ListView(
       children: [
         Row(
@@ -85,64 +86,50 @@ class _CreditPageState extends State<CreditPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(
-                          Icons.monetization_on,
-                          color: Colors.green,
-                        ),
-                        Text(
-                          'CREDITO',
-                          style:
-                              TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                  ),
+                  const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: TitlesCredits(
+                        icon: Icons.monetization_on,
+                        title: 'CREDITO',
+                        fontSize: 18,
+                      )),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Column(
                         children: [
                           InputCredit(
-                              name: 'Monto Credito',
-                              controller: txtCreditAmount,
-                              suffix: '.00',
-                              prefix: 'S/.',
-                              width: 120,
-                              type: TextInputType.number,),
+                            name: 'Monto Credito',
+                            controller: txtCreditAmount,
+                            suffix: '.00',
+                            prefix: 'S/.',
+                            width: 120,
+                            type: TextInputType.number,
+                          ),
                           InputCredit(
-                              name: 'Interes',
-                              controller: txtInterest,
-                              suffix: '%',
-                              prefix: '',
-                              width: 120,
-                            type: TextInputType.number,),
+                            name: 'Interes',
+                            controller: txtInterest,
+                            suffix: '%',
+                            prefix: '',
+                            width: 120,
+                            type: TextInputType.number,
+                          ),
                           InputCredit(
-                              name: 'Cuotas',
-                              controller: txtNumberOfPayments,
-                              suffix: '',
-                              prefix: '',
-                              width: 120,
-                            type: TextInputType.number,),
+                            name: 'Cuotas',
+                            controller: txtNumberOfPayments,
+                            suffix: '',
+                            prefix: '',
+                            width: 120,
+                            type: TextInputType.number,
+                          ),
                         ],
                       ),
                       Column(
                         children: [
-                          Row(
-                            children: const [
-                              Icon(
-                                Icons.table_view,
-                                color: Colors.green,
-                              ),
-                              Text(
-                                'SIMULADOR',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ],
+                          const TitlesCredits(
+                            icon: Icons.table_view,
+                            title: 'SIMULADOR',
+                            fontSize: 15,
                           ),
                           Container(
                             width: 150,
@@ -180,9 +167,11 @@ class _CreditPageState extends State<CreditPage> {
                         dropdownColor: Styles.backgroundOrange,
                         iconEnabledColor: Styles.blueDark,
                         decoration: const InputDecoration(
-                          border: OutlineInputBorder(borderSide: BorderSide.none),
+                          border:
+                              OutlineInputBorder(borderSide: BorderSide.none),
                         ),
-                        items: list.map<DropdownMenuItem<String>>((String value) {
+                        items:
+                            list.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(value),
@@ -194,54 +183,54 @@ class _CreditPageState extends State<CreditPage> {
                           });
                         }),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(
-                          Icons.person,
-                          color: Colors.green,
-                        ),
-                        Text(
-                          'CLIENTE',
-                          style:
-                              TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
+                  const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: TitlesCredits(
+                        icon: Icons.person,
+                        title: 'CLIENTE',
+                        fontSize: 18,
+                      )),
                   Container(
-                    width: 200,
+                    width: 250,
                     height: 200,
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey),
                         borderRadius: BorderRadius.circular(20)),
-                    child: FutureBuilder(
-                        future: _customers,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            List<Customer> customer = snapshot.data!;
-                            return ListView.builder(
-                                itemCount: customer.length,
-                                itemBuilder: (context, index) {
-                                  return ListTile(
-                                    title: Text(customer[index].name.toString()),
-                                    subtitle:
-                                        Text(customer[index].lastName.toString()),
-                                    leading: const Icon(Icons.person),
-                                    selected: index == _selectedIndex,
-                                    onTap: () {
-                                      setState(() {
-                                        _selectedIndex = index;
-                                      });
-                                      customerSelected = customer[index];
-
-                                    },
-                                  );
-                                });
+                    child: ListView.builder(
+                        itemCount: customerProvider.customerList.length,
+                        itemBuilder: (context, index) {
+                          if (customerProvider.isLoading) {
+                            return const Center(
+                                child: CircularProgressIndicator());
                           }
-                          return const Center(child: CircularProgressIndicator());
+                          return ListTile(
+                            title: Text(customerProvider
+                                .customerList[index].name
+                                .toString()),
+                            subtitle: Text(customerProvider
+                                .customerList[index].lastName
+                                .toString()),
+                            leading: const Icon(
+                              Icons.person,
+                              color: Colors.black,
+                            ),
+                            selected: index == _selectedIndex,
+                            selectedColor: Colors.green,
+                            trailing: IconButton(
+                              icon: const Icon(
+                                Icons.remove_red_eye,
+                                color: Colors.red,
+                              ),
+                              onPressed: () {},
+                            ),
+                            onTap: () {
+                              setState(() {
+                                _selectedIndex = index;
+                              });
+                              _customerSelected = customerProvider.customerList[index];
+
+                            },
+                          );
                         }),
                   ),
                   Padding(
@@ -251,251 +240,152 @@ class _CreditPageState extends State<CreditPage> {
                         iconData: Icons.check,
                         label: 'CREAR',
                         onPressed: () {
-                          setState(() {
-                            creditCreated = service.createCredit(
+                          customerProvider.setCustomerSelected(_customerSelected);
+                            creditProvider.createCredit(
                                 double.parse(txtCreditAmount.text),
                                 double.parse(txtInterest.text) / 100,
                                 int.parse(txtNumberOfPayments.text),
                                 dropDownValue,
                                 0.5,
-                                customerSelected);
-                              txtCreditAmount.clear();
-                              txtInterest.clear();
-                              txtNumberOfPayments.clear();
-
-                          });
+                                customerProvider.getCustomerSelected());
+                            txtCreditAmount.clear();
+                            txtInterest.clear();
+                            txtNumberOfPayments.clear();
                         },
                       )),
                 ],
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width / 2.5,
-              height: MediaQuery.of(context).size.height / 1.05,
-              decoration: BoxDecoration(
-                  color: Styles.white, borderRadius: BorderRadius.circular(10)),
-              child: FutureBuilder(
-                future: creditCreated,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    var credit = snapshot.data!;
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 400,
-                          decoration: BoxDecoration(
-                              color: Styles.blueDark,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  width: 300,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Styles.scaffoldBackgroundColor,
+                width: MediaQuery.of(context).size.width / 2.5,
+                height: MediaQuery.of(context).size.height / 1.05,
+                decoration: BoxDecoration(
+                    color: Styles.white,
+                    borderRadius: BorderRadius.circular(10)),
+                child:
+                creditProvider.isLoading
+                    ?  const Center(child: CircularProgressIndicator()):Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 400,
+                      decoration: BoxDecoration(
+                          color: Styles.blueDark,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              width: 300,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Styles.scaffoldBackgroundColor,
+                              ),
+                              child: Row(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceAround,
+                                children: [
+                                  const Icon(
+                                    Icons.person_outline,
+                                    size: 40,
                                   ),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      const Icon(
-                                        Icons.person_outline,
-                                        size: 40,
-                                      ),
-                                      Column(
+                                  Consumer<CustomerProvider>(
+                                    builder: (_,snapshot,__) {
+                                      return Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Row(
                                             children: [
                                               Text(
-                                                customerSelected.name.toString(),
+                                                snapshot.getCustomerSelected().name.toString(),
                                                 style: const TextStyle(
-                                                    fontWeight: FontWeight.bold),
+                                                    fontWeight:
+                                                    FontWeight.bold),
                                               ),
                                               Text(
-                                                ' ${customerSelected.lastName.toString()}',
+                                                snapshot.getCustomerSelected().lastName.toString(),
                                                 style: const TextStyle(
-                                                    fontWeight: FontWeight.bold),
+                                                    fontWeight:
+                                                    FontWeight.bold),
                                               ),
                                             ],
                                           ),
-                                          Text('DNI: ${customerSelected.dni.toString()}'),
-                                          Text('CEL: ${customerSelected.phoneNumber.toString()}'),
+                                          Text(
+                                              'DNI: ${snapshot.getCustomerSelected().dni.toString()}'),
+                                          Text(
+                                              'CEL: ${snapshot.getCustomerSelected().phoneNumber.toString()}'),
                                         ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'S/ ${credit.creditAmount}',
-                                        style: const TextStyle(
-                                            fontSize: 25, color: Colors.white),
-                                      ),
-                                      Text(
-                                        'Monto del Credito',
-                                        style: TextStyle(
-                                            color: Styles.backgroundOrange),
-                                      )
-                                    ],
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'S/. ${credit.paymentsAmount.toString()}',
-                                        style: const TextStyle(
-                                            fontSize: 25, color: Colors.white),
-                                      ),
-                                      Text(
-                                        'Couta ',
-                                        style: TextStyle(
-                                            color: Styles.backgroundOrange),
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        '${((credit.decimalInterest! * 100).toStringAsFixed(2))} %',
-                                        style: const TextStyle(
-                                            fontSize: 25, color: Colors.white),
-                                      ),
-                                      Text(
-                                        'Interes',
-                                        style: TextStyle(
-                                            color: Styles.backgroundOrange),
-                                      )
-                                    ],
+                                      );
+                                    }
                                   ),
                                 ],
                               ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'S/ ${credit.totalAmount}',
-                                        style: const TextStyle(
-                                            fontSize: 25, color: Colors.white),
-                                      ),
-                                      Text(
-                                        'Devolucion Total',
-                                        style: TextStyle(
-                                            color: Styles.backgroundOrange),
-                                      )
-                                    ],
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        credit.numberOfPayments.toString(),
-                                        style: const TextStyle(
-                                            fontSize: 25, color: Colors.white),
-                                      ),
-                                      Text(
-                                        'Numero de Cuotas ',
-                                        style: TextStyle(
-                                            color: Styles.backgroundOrange),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                    color: Styles.backgroundOrange,
-                                    borderRadius: const BorderRadius.vertical(
-                                        bottom: Radius.circular(10))),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Primer dia de Pago:  ',
-                                            style: TextStyle(
-                                              color: Styles.blueDark,
-                                            ),
-                                          ),
-                                          Text(
-                                            credit.firstPayDate.toString(),
-                                            style: TextStyle(
-                                                color: Styles.blueDark,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Ultimo dia de Pago:  ',
-                                            style: TextStyle(
-                                              color: Styles.blueDark,
-                                            ),
-                                          ),
-                                          Text(
-                                            credit.expirationDate.toString(),
-                                            style: TextStyle(
-                                                color: Styles.blueDark,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceAround,
+                            children: [
+                              CreditPropertiesNames(title: 'Monto de Credito', value: creditProvider.creditCreated.creditAmount.toString()),
+                              CreditPropertiesNames(title: 'Cuota', value: creditProvider.creditCreated.paymentsAmount.toString()),
+                              CreditPropertiesNames(title: 'Interes', value: '${creditProvider.creditCreated.decimalInterest==null? 'O' :((creditProvider.creditCreated.decimalInterest!*100).toStringAsFixed(2))} %'),
                             ],
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ButtonWithIcon(
-                              color: Colors.green,
-                              iconData: Icons.print,
-                              onPressed: () {},
-                              label: 'CONTRATO'),
-                        )
-                      ],
-                    );
-                  }
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text('Creando credito'),
-                      CircularProgressIndicator()
-                    ],
-                  );
-                },
-              ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceAround,
+                            children: [
+                              CreditPropertiesNames(title: 'Devolucion Total', value: creditProvider.creditCreated.totalAmount.toString()),
+                              CreditPropertiesNames(title: 'Numero de Cuotas', value:  creditProvider
+                                  .creditCreated.numberOfPayments
+                                  .toString()),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Styles.backgroundOrange,
+                                borderRadius: const BorderRadius.vertical(
+                                    bottom: Radius.circular(10))),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  DaysPayments(title:  'Primer dia de Pago:  ', value: creditProvider
+                                      .creditCreated.firstPayDate
+                                      .toString()),
+                                  DaysPayments(title:  'Ultimo dia de Pago:  ', value: creditProvider
+                                      .creditCreated.firstPayDate
+                                      .toString()),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ButtonWithIcon(
+                          color: Colors.green,
+                          iconData: Icons.print,
+                          onPressed: () {},
+                          label: 'CONTRATO'),
+                    )
+                  ],
+                )
             ),
           ],
         ),
