@@ -24,7 +24,7 @@ class TestProvider extends ChangeNotifier{
     isLoading = true;
     _creditCustomerList = await CustomerService().getCreditsByCustomer(customerId);
     isLoading = false;
-    notifyListeners();
+
   }
 
   void addCustomer(Customer customer) async{
