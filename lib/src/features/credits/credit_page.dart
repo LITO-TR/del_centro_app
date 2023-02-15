@@ -1,4 +1,3 @@
-import 'package:del_centro_app/src/core/models/credit.dart';
 import 'package:del_centro_app/src/core/models/customer.dart';
 import 'package:del_centro_app/src/features/credits/widgets/credit_property_names.dart';
 import 'package:del_centro_app/src/features/credits/widgets/days_payments.dart';
@@ -32,7 +31,6 @@ class _CreditPageState extends State<CreditPage> {
   double totalAmount = 0.0;
   double payments = 0.0;
   String dropDownValue = list.first;
-  Future<Credit>? creditCreated;
   late Customer _customerSelected;
   @override
   void initState() {
