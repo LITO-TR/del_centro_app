@@ -2,7 +2,7 @@ import 'package:del_centro_app/src/core/services/customer_service.dart';
 import 'package:del_centro_app/src/features/credits/widgets/input_credit.dart';
 import 'package:del_centro_app/src/features/customers/screen/customer_credits.dart';
 import 'package:del_centro_app/src/features/customers/widgets/customer_card.dart';
-import 'package:del_centro_app/src/features/test/test_provider.dart';
+import 'package:del_centro_app/src/providers/customer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:del_centro_app/src/core/models/customer.dart';
 import 'package:del_centro_app/src/styles/styles.dart';
@@ -28,14 +28,14 @@ class _CustomerPageState extends State<CustomerPage> {
   @override
   void initState() {
     // TODO: implement initState
-    Provider.of<TestProvider>(context,listen: false).getCustomers();
+    Provider.of<CustomerProvider>(context,listen: false).getCustomers();
     super.initState();
   }
   void showForm() {
     showDialog(
         context: context,
         builder: (context) {
-          final customerProvider = context.watch<TestProvider>();
+          final customerProvider = context.watch<CustomerProvider>();
           return AlertDialog(
             title: const Center(child: Text("Registrar Ciente",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.green),)),
             content: SingleChildScrollView(
@@ -80,7 +80,6 @@ class _CustomerPageState extends State<CustomerPage> {
                 onPressed: () {
                   Customer customer = Customer(name: txtName.text, lastName: txtLastName.text, address: txtAddress.text, dni: txtDNI.text, civilStatus: txtCivilStatus.text, phoneNumber: txtPhoneNumber.text);
                   customerProvider.addCustomer(customer);
-                  customerProvider.getCustomers();
                   txtName.clear();
                   txtLastName.clear();
                   txtAddress.clear();
@@ -99,7 +98,7 @@ class _CustomerPageState extends State<CustomerPage> {
 
   @override
   Widget build(BuildContext context) {
-    final customerProvider = context.watch<TestProvider>();
+    final customerProvider = context.watch<CustomerProvider>();
     return ListView(
         children: [
           Stack(
@@ -122,7 +121,7 @@ class _CustomerPageState extends State<CustomerPage> {
                           ),
                         ),
                   ),
-                   Container(
+                   customerProvider.isLoading? const Center(child: CircularProgressIndicator()):Container(
                           decoration: const BoxDecoration(),
                           width: MediaQuery.of(context).size.width / 1.1,
                           height: MediaQuery.of(context).size.height *0.8,
