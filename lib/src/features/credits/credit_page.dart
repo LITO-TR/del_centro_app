@@ -227,7 +227,7 @@ class _CreditPageState extends State<CreditPage> {
                               });
                               _customerSelected = customerProvider.customerList[index];
 
-                            },
+                              },
                           );
                         }),
                   ),
@@ -262,7 +262,8 @@ class _CreditPageState extends State<CreditPage> {
                     borderRadius: BorderRadius.circular(10)),
                 child:
                 creditProvider.isLoading
-                    ?  const Center(child: CircularProgressIndicator()):Column(
+                    ?
+                Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
@@ -383,7 +384,7 @@ class _CreditPageState extends State<CreditPage> {
                           label: 'CONTRATO'),
                     )
                   ],
-                )
+                ):  const Center(child: CircularProgressIndicator())
             ),
           ],
         ),

@@ -1,12 +1,13 @@
-import 'package:del_centro_app/src/core/services/credit_service.dart';
 import 'package:flutter/cupertino.dart';
+
 
 import '../core/models/credit.dart';
 import '../core/models/customer.dart';
+import '../core/services/credit_service.dart';
 
 class CreditProvider extends ChangeNotifier{
   Credit _creditCreated = Credit();
-  bool isLoading = true;
+  bool isLoading = false;
 
   Credit get creditCreated => _creditCreated;
 
@@ -19,9 +20,7 @@ class CreditProvider extends ChangeNotifier{
       Customer customer) async{
     isLoading = false;
     _creditCreated = await CreditService().createCredit(creditAmount, decimalInterest, numberOfPayments, paymentMethod, mora, customer);
-
+    isLoading = true;
     notifyListeners();
   }
-
-
 }
