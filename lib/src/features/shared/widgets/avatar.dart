@@ -7,7 +7,7 @@ class Avatar extends StatelessWidget {
     return  Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
-        children: [
+        children: const [
           CircleAvatar(),
           Text('Diana Torres',style: TextStyle(
             color: Colors.orangeAccent
