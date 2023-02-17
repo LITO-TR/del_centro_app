@@ -1,7 +1,7 @@
 import 'package:del_centro_app/src/features/sign-in/sign_in_page.dart';
-import 'package:del_centro_app/src/features/test/test_provider.dart';
 import 'package:del_centro_app/src/providers/credit_provider.dart';
 import 'package:del_centro_app/src/providers/customer_provider.dart';
+import 'package:del_centro_app/src/providers/payment_provider.dart';
 import 'package:del_centro_app/src/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,11 +19,11 @@ class MyApp extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => TestProvider(),
-        ),
+
         ChangeNotifierProvider(create: (_) => CreditProvider()),
         ChangeNotifierProvider(create: (_) => CustomerProvider()),
+        ChangeNotifierProvider(create: (_) => PaymentProvider()),
+
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
