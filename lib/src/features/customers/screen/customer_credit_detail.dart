@@ -1,11 +1,12 @@
-import 'package:del_centro_app/src/core/services/credit_service.dart';
-import 'package:del_centro_app/src/core/services/payment_service.dart';
 import 'package:del_centro_app/src/core/models/credit.dart';
 import 'package:del_centro_app/src/core/models/customer.dart';
 import 'package:del_centro_app/src/core/models/payment.dart';
 import 'package:del_centro_app/src/features/credits/widgets/input_credit.dart';
+import 'package:del_centro_app/src/providers/customer_provider.dart';
 import 'package:del_centro_app/src/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 
 class CustomerCreditDetail extends StatefulWidget {
   const CustomerCreditDetail({Key? key, required this.credit, required this.customer})
@@ -17,30 +18,25 @@ class CustomerCreditDetail extends StatefulWidget {
 }
 
 class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
-  final paymentService = PaymentService();
-  final creditService = CreditService();
   late Credit creditData;
-  late List<Payment> paymentsData;
-
-  late Future<List<Payment>> _payments;
   TextEditingController txtCustomerPayment = TextEditingController();
-  TextEditingController txtPaymentMethod = TextEditingController();
   static const List<String> list = <String>['EFECTIVO', 'DEPOSITO'];
   String dropDownValue = list.first;
 
   TextStyle style = const TextStyle(color: Colors.white, fontWeight: FontWeight.bold);
   @override
   void initState() {
-    // TODO: implement initState
     creditData = widget.credit;
-    _payments = creditService.getPaymentsByCredit(widget.credit.id.toString());
+    Provider.of<CustomerProvider>(context,listen: false).getPaymentsByCreditId(widget.credit.id.toString());
+    Provider.of<CustomerProvider>(context,listen: false).getCreditById(widget.credit.id.toString());
     super.initState();
   }
 
-  /*Future<Payment>*/ showDialogPayment(int index) {
-    showDialog(
+showDialogPayment(int index, Payment payment) {
+  showDialog(
         context: context,
         builder: (context) {
+          final customerProvider = context.watch<CustomerProvider>();
           return AlertDialog(
             title: const Center(
                 child: Text(
@@ -72,17 +68,17 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                ' ${paymentsData[index].paymentOrder}',
+                                ' ${payment.paymentOrder}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                '${paymentsData[index].date}',
+                                '${payment.date}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                '${paymentsData[index].payment}',
+                                '${payment.payment}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
@@ -102,7 +98,7 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
                       prefix: '',
                       width: 150,
                       type: TextInputType.number),
-                  Text(
+                  const Text(
                     'METODO DE PAGO',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
@@ -147,10 +143,9 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
                 ),
               ),
               TextButton(
-                onPressed: () async {
-                  paymentsData[index] = await  paymentService.setPayment(paymentsData[index].id.toString(),dropDownValue, double.parse(txtCustomerPayment.text));
-                  creditData = await creditService.getCreditbyId(paymentsData[index].creditId.toString());
-                  setState(() {});
+                onPressed: ()  async {
+                   customerProvider.makePayment(widget.customer.id.toString(),widget.credit.id.toString(),index, payment.id.toString(), dropDownValue, double.parse(txtCustomerPayment.text));
+                   txtCustomerPayment.clear();
                   Navigator.of(context).pop();
                 },
                 child: const Text(
@@ -161,12 +156,14 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
             ],
           );
         });
-    //return paymentService.setPayment(payment.id.toString(), dropDownValue,
-      //  double.parse(txtCustomerPayment.text));
+
   }
 
   @override
   Widget build(BuildContext context) {
+    //final creditProvider =  context.watch<CreditProvider>();
+    final creditProvider =  context.watch<CustomerProvider>();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.customer.name.toString()),
@@ -179,7 +176,7 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Container(
+                creditProvider.isLoading? const Center(child: CircularProgressIndicator()): Container(
                   height: MediaQuery.of(context).size.height * 0.35,
                   width: MediaQuery.of(context).size.width * 0.35,
                   decoration: BoxDecoration(
@@ -212,19 +209,19 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(creditData.creditType.toString()),
-                          Text(creditData.creditAmount.toString()),
-                          Text((creditData.decimalInterest! * 100).toString()),
-                          Text(creditData.interestAmount.toString()),
-                          Text(creditData.totalAmount.toString()),
-                          Text(creditData.paymentsAmount.toString()),
-                          Text(creditData.paymentMethod.toString()),
-                          Text(creditData.mora.toString()),
-                          Text(creditData.firstPayDate.toString()),
-                          Text(creditData.expirationDate.toString()),
-                          Text(creditData.disbursedAmount.toString()),
-                          Text(creditData.debtAmount.toString()),
-                          Text(creditData.creditStatus.toString()),
+                          Text(creditProvider.creditSelected.creditType.toString()),
+                          Text(creditProvider.creditSelected.creditAmount.toString()),
+                          Text((creditProvider.creditSelected.decimalInterest! * 100).toString()),
+                          Text(creditProvider.creditSelected.interestAmount.toString()),
+                          Text(creditProvider.creditSelected.totalAmount.toString()),
+                          Text(creditProvider.creditSelected.paymentsAmount.toString()),
+                          Text(creditProvider.creditSelected.paymentMethod.toString()),
+                          Text(creditProvider.creditSelected.mora.toString()),
+                          Text(creditProvider.creditSelected.firstPayDate.toString()),
+                          Text(creditProvider.creditSelected.expirationDate.toString()),
+                          Text(creditProvider.creditSelected.disbursedAmount.toString()),
+                          Text(creditProvider.creditSelected.debtAmount.toString()),
+                          Text(creditProvider.creditSelected.creditStatus.toString()),
                         ],
                       )
                     ],
@@ -236,128 +233,113 @@ class _CustomerCreditDetailState extends State<CustomerCreditDetail> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: FutureBuilder<List<Payment>>(
-                      future: _payments,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          List<Payment> listPayments = snapshot.data!;
-                          paymentsData =snapshot.data!;
-                          return Card(
-                            elevation: 5,
-                            borderOnForeground: true,
-                            child: SingleChildScrollView(
-                              child: DataTable(
-                                  headingTextStyle: TextStyle(
-                                      color: Styles.backgroundOrange,
-                                      fontWeight: FontWeight.bold),
-                                  headingRowColor: MaterialStateColor.resolveWith(
-                                      (states) => Styles.blueDark),
-                                  border: TableBorder(
-                                      borderRadius: BorderRadius.circular(20)),
-                                  columns: const [
-                                    DataColumn(label: Center(child: Text('Nro'))),
-                                    DataColumn(
-                                        label: Center(
-                                            child: Text('Fecha de Vencimiento'))),
-                                    DataColumn(
-                                        label: Center(child: Text('Cuota (S/)'))),
-                                    DataColumn(
-                                        label: Center(child: Text('Estado'))),
-                                    DataColumn(
-                                        label: Center(child: Text('Dia de Pago'))),
-                                    DataColumn(
-                                        label: Center(child: Text('Dias Mora'))),
-                                    DataColumn(
-                                        label:
-                                            Center(child: Text('Metodo de Pago'))),
-                                    DataColumn(
-                                        label:
-                                            Center(child: Text('Monto de Pago'))),
-                                    DataColumn(
-                                        label: Center(child: Text('Acciones'))),
-                                  ],
-                                  rows: List<DataRow>.generate(listPayments.length,
-                                      (index) {
-                                       // paymentData = listPayments[index];
-
-                                    Color colorChip = Colors.grey;
-                                    if (paymentsData[index].status == "PENDIENTE") {
-                                      colorChip = Colors.red;
-                                    } else if (paymentsData[index].status ==
-                                        "PAGADO") {
-                                      colorChip = Colors.green;
-                                    }
-                                    return DataRow(
-                                        // color: MaterialStateColor.resolveWith((states) => Styles.backgroundOrange),
-                                        cells: [
-                                          DataCell(Center(
-                                            child: Text(paymentsData[index]
-                                                .paymentOrder
-                                                .toString()),
-                                          )),
-                                          DataCell(Center(
-                                            child: Text(paymentsData[index]
-                                                .date
-                                                .toString()),
-                                          )),
-                                          DataCell(Center(
-                                            child: Text(paymentsData[index]
-                                                .payment
-                                                .toString()),
-                                          )),
-                                          DataCell(
-                                            Chip(
-                                                backgroundColor: colorChip,
-                                                label: Text(
-                                                  paymentsData[index]
-                                                      .status
-                                                      .toString(),
-                                                  style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight: FontWeight.bold),
-                                                )),
-                                          ),
-                                          DataCell(Center(
-                                            child: Text(paymentsData[index]
-                                                .paymentDate
-                                                .toString()),
-                                          )),
-                                          DataCell(Center(
-                                            child: Text(paymentsData[index]
-                                                .moraDays
-                                                .toString()),
-                                          )),
-                                          DataCell(Center(
-                                            child: Text(paymentsData[index]
-                                                .paymentMethod
-                                                .toString()),
-                                          )),
-                                          DataCell(Center(
-                                            child: Text(paymentsData[index]
-                                                .customerPayment
-                                                .toString()),
-                                          )),
-                                          DataCell(Row(
-                                            children: [
-                                              ElevatedButton(
-                                                  onPressed: ()  {
-                                                      showDialogPayment(index);
-                                                  },
-                                                  child: const Icon(
-                                                      Icons.monetization_on))
-                                            ],
-                                          ))
-                                        ]);
-                                  })),
-                            ),
-                          );
-                          // ),
-                        } else if (snapshot.hasError) {
-                          print(snapshot.error);
-                          return Text('${snapshot.error}');
-                        }
-                        return const Center(child: CircularProgressIndicator());
-                      }),
+                  child:creditProvider.isLoading ? const Center(child: CircularProgressIndicator()): Card(
+                    elevation: 5,
+                    borderOnForeground: true,
+                    child: SingleChildScrollView(
+                      child: DataTable(
+                          headingTextStyle: TextStyle(
+                              color: Styles.backgroundOrange,
+                              fontWeight: FontWeight.bold),
+                          headingRowColor: MaterialStateColor.resolveWith(
+                                  (states) => Styles.blueDark),
+                          border: TableBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          columns: const [
+                            DataColumn(label: Center(child: Text('Nro'))),
+                            DataColumn(
+                                label: Center(
+                                    child: Text('Fecha de Vencimiento'))),
+                            DataColumn(
+                                label: Center(child: Text('Cuota (S/)'))),
+                            DataColumn(
+                                label: Center(child: Text('Estado'))),
+                            DataColumn(
+                                label: Center(child: Text('Dia de Pago'))),
+                            DataColumn(
+                                label: Center(child: Text('Dias Mora'))),
+                            DataColumn(
+                                label:
+                                Center(child: Text('Metodo de Pago'))),
+                            DataColumn(
+                                label:
+                                Center(child: Text('Monto de Pago'))),
+                            DataColumn(
+                                label: Center(child: Text('Acciones'))),
+                          ],
+                          rows: List<DataRow>.generate(creditProvider.listPaymentsByCreditId.length,
+                                  (index) {
+                                Color colorChip = Colors.grey;
+                                if (creditProvider.listPaymentsByCreditId[index].status == "PENDIENTE") {
+                                  colorChip = Colors.red;
+                                } else if (creditProvider.listPaymentsByCreditId[index].status ==
+                                    "PAGADO") {
+                                  colorChip = Colors.green;
+                                }
+                                return DataRow(
+                                  // color: MaterialStateColor.resolveWith((states) => Styles.backgroundOrange),
+                                    cells: [
+                                      DataCell(Center(
+                                        child: Text(creditProvider.listPaymentsByCreditId[index]
+                                            .paymentOrder
+                                            .toString()),
+                                      )),
+                                      DataCell(Center(
+                                        child: Text(creditProvider.listPaymentsByCreditId[index]
+                                            .date
+                                            .toString()),
+                                      )),
+                                      DataCell(Center(
+                                        child: Text(creditProvider.listPaymentsByCreditId[index]
+                                            .payment
+                                            .toString()),
+                                      )),
+                                      DataCell(
+                                        Chip(
+                                            backgroundColor: colorChip,
+                                            label: Text(
+                                              creditProvider.listPaymentsByCreditId[index]
+                                                  .status
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            )),
+                                      ),
+                                      DataCell(Center(
+                                        child: Text(creditProvider.listPaymentsByCreditId[index]
+                                            .paymentDate
+                                            .toString()),
+                                      )),
+                                      DataCell(Center(
+                                        child: Text(creditProvider.listPaymentsByCreditId[index]
+                                            .moraDays
+                                            .toString()),
+                                      )),
+                                      DataCell(Center(
+                                        child: Text(creditProvider.listPaymentsByCreditId[index]
+                                            .paymentMethod
+                                            .toString()),
+                                      )),
+                                      DataCell(Center(
+                                        child: Text(creditProvider.listPaymentsByCreditId[index]
+                                            .customerPayment
+                                            .toString()),
+                                      )),
+                                      DataCell(Row(
+                                        children: [
+                                          ElevatedButton(
+                                              onPressed: ()  {
+                                                showDialogPayment(index,creditProvider.listPaymentsByCreditId[index]);
+                                              },
+                                              child: const Icon(
+                                                  Icons.monetization_on))
+                                        ],
+                                      ))
+                                    ]);
+                              })),
+                    ),
+                  ),
                 )
               ],
             ),
