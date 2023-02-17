@@ -68,10 +68,9 @@ class CustomerCard extends StatelessWidget {
                 ]),
                 SizedBox(
                   child: FutureBuilder<List<Credit>>(
-                    future: CustomerService().getCreditsByCustomer(
+                    future: CustomerService().getCreditsByCustomerId(
                         customer.id.toString()),
                     builder: (context, snapshot) {
-
                         if(snapshot.hasData){
                           List<Credit> credits =
                               snapshot.data ?? [];
