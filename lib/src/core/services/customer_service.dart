@@ -21,7 +21,7 @@ class CustomerService{
 
   }
   
-  Future<List<Credit>> getCreditsByCustomer(String customerId) async{
+  Future<List<Credit>> getCreditsByCustomerId(String customerId) async{
     final res = await http.get(Uri.parse('$url/$customerId/credits'));
     return creditFromJson(res.body);
   }
@@ -41,7 +41,7 @@ class CustomerService{
     return customerFromJson(res.body);
 
   }
-  Future<void> deteletCustomer(String customerId) async{
+  Future<void> deleteCustomer(String customerId) async{
     final res = await http.delete(Uri.parse('$url/$customerId'));
     print('deleted: ${res.body}');
   }
