@@ -2,9 +2,9 @@ import 'package:del_centro_app/src/features/balance/balance_page.dart';
 import 'package:del_centro_app/src/features/shared/widgets/avatar.dart';
 import 'package:del_centro_app/src/features/credits/credit_page.dart';
 import 'package:del_centro_app/src/features/customers/customer_page.dart';
-import 'package:del_centro_app/src/features/dashboard/dashboard_page.dart';
 import 'package:flutter/material.dart';
 import 'package:del_centro_app/src/styles/styles.dart';
+import '../src/features/payments/payments_page.dart';
 class Layout extends StatefulWidget {
   const Layout({Key? key}) : super(key: key);
 
