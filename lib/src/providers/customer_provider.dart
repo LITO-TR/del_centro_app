@@ -48,7 +48,7 @@ notifyListeners();
 
 
 
-  void makePayment(String customerId, String creditId, int index,String paymentId, String method, double customerPayment)async{
+  void makePaymentCustomer(String customerId, String creditId, int index,String paymentId, String method, double customerPayment)async{
     isLoading = true;
     _listPaymentsByCreditId[index] = await PaymentService().setPayment(paymentId, method, customerPayment);
     _creditSelected = await CreditService().getCreditbyId(creditId);
