@@ -19,11 +19,9 @@ class MyApp extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-
         ChangeNotifierProvider(create: (_) => CreditProvider()),
         ChangeNotifierProvider(create: (_) => CustomerProvider()),
         ChangeNotifierProvider(create: (_) => PaymentProvider()),
-
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
