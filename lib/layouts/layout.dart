@@ -60,7 +60,7 @@ class _LayoutState extends State<Layout> {
                   NavigationRailDestination(
                     icon: const Icon(Icons.balance_outlined),
                     selectedIcon: const Icon(Icons.balance),
-                    label: Text('Cuadrar',style: TextStyle(color: Styles.backgroundOrange),),
+                    label: Text('Arqueo',style: TextStyle(color: Styles.backgroundOrange),),
                   ),
 
                 ],
