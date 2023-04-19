@@ -131,7 +131,7 @@ class _SimpleLoginScreenState extends State<SimpleLoginScreen> {
                   height: screenHeight * .075,
                 ),
                 ElevatedButton(
-                  child: Text("Log In"),
+                  child: const Text("Log In"),
                   onPressed: (){
                     Navigator.push(
                         context,

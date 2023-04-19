@@ -141,7 +141,7 @@ class _CreditCardState extends State<CreditCard> {
           OutlinedButton(
             onPressed: (){
             showDialogExtension(widget.credit);
-          }, child:Text('AMPLIACION'),),
+          }, child:const Text('AMPLIACION'),),
           Container(
             width: MediaQuery.of(context).size.width,
             height: 30,

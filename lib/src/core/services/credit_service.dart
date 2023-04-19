@@ -22,7 +22,6 @@ class CreditService {
       "customerId": customer.id, // change id
       "employeeId": '63c87cb1f110c0f21b2d0d68' // change id
     };
-    print(creditObj);
     final headers = {"Content-Type": "application/json;charset=UTF-8"};
     final res = await http.post(Uri.parse(url),
         headers: headers, body: jsonEncode(creditObj)); // credit a json
@@ -43,7 +42,6 @@ class CreditService {
 
   Future<List<Payment>> getPaymentsByCredit(String creditId)async {
     final res = await http.get(Uri.parse('$url/$creditId/payments'));
-    print(paymentFromJson(res.body));
     return paymentFromJson(res.body);
   }
 
@@ -71,5 +69,21 @@ class CreditService {
 
       return creditJson(res.body);
    }
+
+    // amortizacion(lo q te da el cliente)
+    // reprogramacion (ampliacion)= credito vencido
+    // renovacion -> nuevo credito
+    // alternos
+    // agregar datos de credito -> destino de credito ¿para q es el credito? Consumo y capital de trabajo
+    // nuevo, alternos, renovacion
+    // reprogramacion y ampliacion
+    // semanales -> 999 - penalidad(2.50) + mora(0.5); 1000-5000(1 sol de mora y penalidad: 5) -> por cuotaaa.
+    // CAMBIAR INTERES METODO DEL BANCO
+    // AMPLIACION DESCUENTO
+    // ASESORES DIANA LUCI MIRIAM ANITA:
+    // DESCUENTOS - BANCOS - ASESORES (Cuota - Mora - Total)
+    // descuento -> solo ampliaciones;
+    // DEPOSITOS -> BANCOS
+
 }
 

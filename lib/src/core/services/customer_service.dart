@@ -42,7 +42,6 @@ class CustomerService{
 
   }
   Future<void> deleteCustomer(String customerId) async{
-    final res = await http.delete(Uri.parse('$url/$customerId'));
-    print('deleted: ${res.body}');
+    await http.delete(Uri.parse('$url/$customerId'));
   }
 }

@@ -83,7 +83,7 @@ class _DayDetailState extends State<DayDetail> {
                         headerBuilder: (BuildContext context, bool isExpanded) {
                           return  ListTile(
                             title:  const Text('Cobranzas',style: TextStyle(color: Colors.green),),
-                            trailing: Text('TOTAL:  $totalPayments',style: TextStyle(fontWeight: FontWeight.bold),),
+                            trailing: Text('TOTAL:  $totalPayments',style: const TextStyle(fontWeight: FontWeight.bold),),
 
                           );
                         },
@@ -109,8 +109,6 @@ class _DayDetailState extends State<DayDetail> {
                                         }
                                           totalPayments  += paymentProvider.listPaymentsByDate[i].customerPayment!;
                                       }
-                                       print(totalPaymentsCash);
-                                       print(totalPaymentsDeposit);
                                       return Column(
                                         children: [
                                           Card(
